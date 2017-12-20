@@ -1,0 +1,11 @@
+#!/bin/bash
+
+APP_NAME=$1
+APP_NAME=${APP_NAME:=parking-app}
+
+DOCKER_IMAGES=$(docker images | grep $APP_NAME | awk "{print \$3}")
+##TODO: check if any containers exist
+#docker rm $DOCKER_IAMGES
+docker rmi -f $DOCKER_IMAGES
+
+
