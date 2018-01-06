@@ -492,7 +492,7 @@ func (s *SmartContract) EndParking(APIstub shim.ChaincodeStubInterface, args []s
 
 	parkingTimeId := args[0]
 	fmt.Printf("Ending parking for id: %s\n", parkingTimeId)
-	//1
+	//--//1
 	// parkingTime, err := s.ParkingTimeService.Get(APIstub, parkingTimeId)
 
 	//2
