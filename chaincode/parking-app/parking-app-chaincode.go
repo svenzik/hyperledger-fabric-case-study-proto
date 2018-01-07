@@ -547,6 +547,7 @@ func (s *SmartContract) EndParking(APIstub shim.ChaincodeStubInterface, args []s
 
 	parkingTime.CurrentTimestamps = calculatedEndTime
 	//END
+	
 	parkingTime.ParkingEnd = calculatedEndTime.TransactionTime
 
 	delta := parkingTime.ParkingEnd.Sub(parkingTime.ParkingStart)
