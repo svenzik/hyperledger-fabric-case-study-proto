@@ -40,5 +40,5 @@ type CurrentTimestamp struct {
 	TransactionTime time.Time `json:"transactionTime"`
 	TimeWindowCurrentTime time.Time `json:"timeWindowCurrentTime"`
 	TimeServerCurrentTime time.Time `json:"timeServerCurrentTime"`
-	errors []string `json:"errors"`
+	Errors []string `json:"errors"`
 }
