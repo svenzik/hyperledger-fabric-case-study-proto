@@ -5,7 +5,7 @@
 
  This code is based on code written by the Hyperledger Fabric community.
   Original code can be found here: https://github.com/hyperledger/fabric-samples/blob/release/chaincode/fabcar/fabcar.go
- */
+*/
 
 package main
 
@@ -18,23 +18,26 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"math"
 	"strconv"
 	"time"
-	"math"
+
 	"github.com/digitorus/timestamp"
 
 	. "github.com/parking/model"
 
+	"github.com/hyperledger/fabric/common/util"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	sc "github.com/hyperledger/fabric/protos/peer"
+
 	"github.com/parking/parkingservice"
 )
 
 // Define the Smart Contract structure
 type SmartContract struct {
-	ParkingspotService parkingservice.ParkingspotService
-	ParkingTimeService parkingservice.ParkingTimeService
-	UserService parkingservice.UserService
+	ParkingspotService   parkingservice.ParkingspotService
+	ParkingTimeService   parkingservice.ParkingTimeService
+	UserService          parkingservice.UserService
 	ParkingCommonService parkingservice.ParkingCommonService //TESTING
 }
 
@@ -43,7 +46,7 @@ type SmartContract struct {
  called when the Smart Contract "tuna-chaincode" is instantiated by the network
  * Best practice is to have any Ledger initialization in separate function
  -- see initLedger()
- */
+*/
 func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	return shim.Success(nil)
 }
@@ -52,7 +55,7 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
  * The Invoke method *
  called when an application requests to run the Smart Contract "tuna-chaincode"
  The app also specifies the specific smart contract function to call with args
- */
+*/
 func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response {
 
 	// Retrieve the requested Smart Contract function and arguments
@@ -97,7 +100,7 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
  * The getParkingTime method *
 Used to view the records of one particular tuna
 It takes one argument -- the key for the tuna in question
- */
+*/
 func (s *SmartContract) getParkingTime(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	if len(args) != 1 {
@@ -121,7 +124,7 @@ func (s *SmartContract) getParkingTimeC(APIstub shim.ChaincodeStubInterface, arg
 	parkingTimeId := args[0]
 	fmt.Printf("- SVENZIK getParkingTime:%s\n", parkingTimeId)
 
-	objectKeys :=  []string{parkingTimeId}
+	objectKeys := []string{parkingTimeId}
 	compositeKey, _ := s.ParkingCommonService.CreateKey(APIstub, ParkingTime{}, objectKeys)
 	fmt.Printf("Getting using key: %s\n", compositeKey)
 
@@ -150,7 +153,7 @@ func (s *SmartContract) getParkingTimeC(APIstub shim.ChaincodeStubInterface, arg
 	// resultAsBytesService, _ = json.Marshal(parkingTime)
 	// resultAsBytes = append(resultAsBytes, []byte("\nKSERVICE: ")...)
 	// resultAsBytes = append(resultAsBytes, resultAsBytesService...)
-  //
+	//
 	// parkingTime, _ =s.ParkingTimeService.Get(APIstub, parkingTimeId)
 	// resultAsBytesService, _ = json.Marshal(parkingTime)
 	// resultAsBytes = append(resultAsBytes, []byte("\nOSERVICE: ")...)
@@ -163,7 +166,7 @@ func (s *SmartContract) getParkingTimeC(APIstub shim.ChaincodeStubInterface, arg
  * The findParkingTime method *
 Used to search the records of one particular tuna
 It takes one argument -- the coudhDB query string for the tuna in question
- */
+*/
 func (s *SmartContract) findParkingTime(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	if len(args) != 1 {
@@ -201,11 +204,12 @@ func (s *SmartContract) findBetweenTime(APIstub shim.ChaincodeStubInterface, arg
 
 	return shim.Success([]byte(result))
 }
+
 /*
  * The initLedger method
  */
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
-		parkingSpot := []ParkingTime{
+	parkingSpot := []ParkingTime{
 		ParkingTime{ParkingStart: time.Now(), ParkingEnd: time.Now(), CostPerMinute: 10, Parkingspot: Parkingspot{Name: "Tartu-Sobra-tee-1-315"}},
 		ParkingTime{ParkingStart: time.Now().Add(2 * time.Minute), ParkingEnd: time.Now().Add(5 * time.Minute), CostPerMinute: 10, Parkingspot: Parkingspot{Name: "Tartu-Sobra-tee-1-315"}},
 		ParkingTime{ParkingStart: time.Now().Add(10 * time.Minute), ParkingEnd: time.Now().Add(30 * time.Minute), CostPerMinute: 10, Parkingspot: Parkingspot{Name: "Tartu-Sobra-tee-1-315"}},
@@ -216,7 +220,7 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 	i := 0
 	for i < len(parkingSpot) {
 		parkingSpotAsBytes, _ := json.Marshal(parkingSpot[i])
-		s.saveParkingtime(APIstub, []string{strconv.Itoa(i+1), fmt.Sprintf("%s", parkingSpotAsBytes)})
+		s.saveParkingtime(APIstub, []string{strconv.Itoa(i + 1), fmt.Sprintf("%s", parkingSpotAsBytes)})
 		//APIstub.PutState(strconv.Itoa(i+1), parkingSpotAsBytes)
 		fmt.Println("Added", parkingSpot[i])
 		i = i + 1
@@ -229,7 +233,7 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
  * The save method *
 Fisherman like Sarah would use to record each of her parkingSpot catches.
 This method takes in five arguments (attributes to be saved in the ledger).
- */
+*/
 func (s *SmartContract) save(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	if len(args) != 2 {
@@ -253,7 +257,7 @@ func (s *SmartContract) save(APIstub shim.ChaincodeStubInterface, args []string)
 	// if err != nil {
 	// 	return shim.Error(fmt.Sprintf("Failed to record parkingTime: %s", args[0]))
 	// }
-  //
+	//
 	// return shim.Success(resultAsBytes)
 }
 
@@ -274,11 +278,11 @@ func (s *SmartContract) saveC(APIstub shim.ChaincodeStubInterface, args []string
 		return shim.Error(fmt.Sprintf("Failed to persist parkingTime: %s", err))
 	}
 
-	objectKeys :=  []string{parkingTime.Id}
+	objectKeys := []string{parkingTime.Id}
 	keyString, _ := s.ParkingCommonService.CreateKey(APIstub, parkingTime, objectKeys)
 	ptResult.Id = keyString + " from: " + parkingTime.Id
 
-	result,_ := json.Marshal(ptResult)
+	result, _ := json.Marshal(ptResult)
 	return shim.Success(result)
 }
 
@@ -295,8 +299,7 @@ func (s *SmartContract) saveCD(APIstub shim.ChaincodeStubInterface, args []strin
 
 	parkingTime.Id = args[0]
 
-
-	objectKeys :=  []string{parkingTime.Id}
+	objectKeys := []string{parkingTime.Id}
 	compositeKey, _ := s.ParkingCommonService.CreateKey(APIstub, parkingTime, objectKeys)
 	fmt.Printf("Saving using key: %s", compositeKey)
 
@@ -356,11 +359,12 @@ func (s *SmartContract) saveParkingtime(APIstub shim.ChaincodeStubInterface, arg
 
 	return shim.Success(result)
 }
+
 /*
  * The getAll method *
 allows for assessing all the records added to the ledger(all tuna catches)
 This method does not take any arguments. Returns JSON string containing results.
- */
+*/
 func (s *SmartContract) getAll(APIstub shim.ChaincodeStubInterface) sc.Response {
 
 	startKey := "0"
@@ -412,7 +416,7 @@ func (s *SmartContract) getAll(APIstub shim.ChaincodeStubInterface) sc.Response 
  * The extendParkingTime method *
 The data in the world state can be updated with who has possession.
 This function takes in 2 arguments, tuna id and new holder name.
- */
+*/
 func (s *SmartContract) extendParkingTime(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	if len(args) != 2 {
@@ -428,7 +432,7 @@ func (s *SmartContract) extendParkingTime(APIstub shim.ChaincodeStubInterface, a
 	json.Unmarshal(resultAsBytes, &parkingTime)
 	// Normally check that the specified argument is a valid holder of parkingTime
 	// we are skipping this check for this example
-	endTime, err := time.Parse(time.RFC3339 , args[1])
+	endTime, err := time.Parse(time.RFC3339, args[1])
 	if err != nil {
 		return shim.Error(fmt.Sprintf("Failed to parse new end parkingTime: %s", args[1]))
 	}
@@ -447,7 +451,7 @@ func (s *SmartContract) extendParkingTime(APIstub shim.ChaincodeStubInterface, a
  * The extendParkingTime method *
 The data in the world state can be updated with who has possession.
 This function takes in 2 arguments, tuna id and new holder name.
- */
+*/
 func (s *SmartContract) iextendParkingTime(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	if len(args) != 2 {
@@ -464,16 +468,16 @@ func (s *SmartContract) iextendParkingTime(APIstub shim.ChaincodeStubInterface, 
 	// Normally check that the specified argument is a valid holder of parkingTime
 	// we are skipping this check for this example
 	parkingTime.ParkingStart = parkingTime.ParkingEnd
-	endTime, err := time.Parse(time.RFC3339 , args[1])
+	endTime, err := time.Parse(time.RFC3339, args[1])
 	if err != nil {
 		return shim.Error(fmt.Sprintf("Failed to parse new end parkingTime: %s", args[1]))
 	}
 	parkingTime.ParkingEnd = endTime
 	//TODO: fix new id generation
 	newId, errAtoi := strconv.Atoi(args[0])
-	newId = newId+1
+	newId = newId + 1
 	if errAtoi != nil {
-		newId = -1;
+		newId = -1
 	}
 	resultAsBytes, _ = json.Marshal(parkingTime)
 	err = APIstub.PutState(strconv.Itoa(newId), resultAsBytes)
@@ -488,7 +492,7 @@ func (s *SmartContract) iextendParkingTime(APIstub shim.ChaincodeStubInterface, 
  * The EndParking method *
 The data in the world state can be updated with who has possession.
 This function takes in 2 arguments, tuna id and new holder name.
- */
+*/
 func (s *SmartContract) EndParking(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 	if len(args) != 1 {
 		return shim.Error("Incorrect number of arguments. Expecting 1, id of parkingTime")
@@ -506,7 +510,7 @@ func (s *SmartContract) EndParking(APIstub shim.ChaincodeStubInterface, args []s
 	// parkingTime, _ := parkingTimeObject.(ParkingTime)
 
 	//3
-	objectKeys :=  []string{parkingTimeId}
+	objectKeys := []string{parkingTimeId}
 	compositeKey, _ := s.ParkingCommonService.CreateKey(APIstub, ParkingTime{}, objectKeys)
 	oResultAsBytes, err := APIstub.GetState(compositeKey)
 	parkingTime := ParkingTime{}
@@ -518,8 +522,8 @@ func (s *SmartContract) EndParking(APIstub shim.ChaincodeStubInterface, args []s
 	}
 
 	//TIME CALCULATIONS
-  calculatedEndTime := CurrentTimestamp{TimeWindow: time.Minute * 5, Errors: []string{}}
-	ts,_ := APIstub.GetTxTimestamp()
+	calculatedEndTime := CurrentTimestamp{TimeWindow: time.Minute * 5, Errors: []string{}}
+	ts, _ := APIstub.GetTxTimestamp()
 
 	//using current timestamp of server - will not work in multipeer envir
 	// calculatedEndTime = time.Now()
@@ -548,9 +552,9 @@ func (s *SmartContract) EndParking(APIstub shim.ChaincodeStubInterface, args []s
 	//from time chaincode
 	timeChaincodeResponse := APIstub.InvokeChaincode("time-app", util.ToChaincodeArgs("GetCurrentTime"), "time-channel")
 	if timeChaincodeResponse.Status != shim.OK {
-			errStr := fmt.Sprintf("Failed to query chaincode. Got error: %s", timeChaincodeResponse.Payload)
-			calculatedEndTime.Errors = append(calculatedEndTime.Errors, fmt.Sprintf("CHAINCODE: %s", errStr))
-			// return shim.Error(errStr)
+		errStr := fmt.Sprintf("Failed to query chaincode. Got error: %s", timeChaincodeResponse.Payload)
+		calculatedEndTime.Errors = append(calculatedEndTime.Errors, fmt.Sprintf("CHAINCODE: %s", errStr))
+		// return shim.Error(errStr)
 	} else {
 		chaincodeCurrentTime = HyperledgerFabricTimestamp{}
 		err = json.Unmarshal(timeChaincodeResponse.Payload, &chaincodeCurrentTime)
@@ -596,7 +600,6 @@ func (s *SmartContract) EndParking(APIstub shim.ChaincodeStubInterface, args []s
 	return shim.Success(resultAsBytes)
 }
 
-
 func (s *SmartContract) get(APIstub shim.ChaincodeStubInterface, id string) (ParkingTime, error) {
 	resultAsBytes, err := APIstub.GetState(id)
 	parkingTime := ParkingTime{}
@@ -641,7 +644,6 @@ func (s *SmartContract) unmarshal(jsonStringBody string) (ParkingTime, error) {
 	return parkingTime, err
 }
 
-
 func (s *SmartContract) marshalQueryResult(resultsIterator shim.StateQueryIteratorInterface) (string, error) {
 	// buffer is a JSON array containing QueryResults
 	var buffer bytes.Buffer
@@ -671,20 +673,21 @@ func (s *SmartContract) marshalQueryResult(resultsIterator shim.StateQueryIterat
 	buffer.WriteString("]")
 	return buffer.String(), nil
 }
+
 /*
  * main function *
 calls the Start function
 The main function starts the chaincode in the container during instantiation.
- */
+*/
 func main() {
 
 	// Create a new Smart Contract
 	err := shim.Start(&SmartContract{
-			ParkingspotService: parkingservice.GetParkingspotService(),
-			ParkingTimeService: parkingservice.GetParkingTimeService(),
-			UserService: parkingservice.GetUserService(),
-			ParkingCommonService: parkingservice.GetParkingCommonService(),
-		})
+		ParkingspotService:   parkingservice.GetParkingspotService(),
+		ParkingTimeService:   parkingservice.GetParkingTimeService(),
+		UserService:          parkingservice.GetUserService(),
+		ParkingCommonService: parkingservice.GetParkingCommonService(),
+	})
 	if err != nil {
 		fmt.Printf("Error creating new Smart Contract: %s", err)
 	} else {
