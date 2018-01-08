@@ -26,7 +26,6 @@ import (
 
 	. "github.com/parking/model"
 
-	"github.com/hyperledger/fabric/common/util"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	sc "github.com/hyperledger/fabric/protos/peer"
 
@@ -550,7 +549,7 @@ func (s *SmartContract) EndParking(APIstub shim.ChaincodeStubInterface, args []s
 	}
 
 	//from time chaincode
-	timeChaincodeResponse := APIstub.InvokeChaincode("time-app", util.ToChaincodeArgs("GetCurrentTime"), "time-channel")
+	timeChaincodeResponse := APIstub.InvokeChaincode("time-app", ToChaincodeArgs("GetCurrentTime"), "time-channel")
 	if timeChaincodeResponse.Status != shim.OK {
 		errStr := fmt.Sprintf("Failed to query chaincode. Got error: %s", timeChaincodeResponse.Payload)
 		calculatedEndTime.Errors = append(calculatedEndTime.Errors, fmt.Sprintf("CHAINCODE: %s", errStr))
@@ -693,4 +692,12 @@ func main() {
 	} else {
 		fmt.Println("SVENZIK SampleChaincode successfully started")
 	}
+}
+
+func ToChaincodeArgs(args ...string) [][]byte {
+	bargs := make([][]byte, len(args))
+	for i, arg := range args {
+		bargs[i] = []byte(arg)
+	}
+	return bargs
 }
