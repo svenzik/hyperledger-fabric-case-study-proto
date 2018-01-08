@@ -40,5 +40,10 @@ type CurrentTimestamp struct {
 	TransactionTime time.Time `json:"transactionTime"`
 	TimeWindowCurrentTime time.Time `json:"timeWindowCurrentTime"`
 	TimeServerCurrentTime time.Time `json:"timeServerCurrentTime"`
+	ChaincodeCurrentTime time.Time `json:"chaincodeCurrentTime"`
 	Errors []string `json:"errors"`
+}
+
+type HyperledgerFabricTimestamp struct {
+	CurrentTime time.Time `json:"currentTime"`
 }

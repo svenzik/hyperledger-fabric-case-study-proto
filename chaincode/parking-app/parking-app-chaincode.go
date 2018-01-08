@@ -545,9 +545,23 @@ func (s *SmartContract) EndParking(APIstub shim.ChaincodeStubInterface, args []s
 		calculatedEndTime.TimeServerCurrentTime = timeServerSignedResponse.Time
 	}
 
+	//from time chaincode
+	timeChaincodeResponse := APIstub.InvokeChaincode("time-app", util.ToChaincodeArgs("GetCurrentTime"), "time-channel")
+	if timeChaincodeResponse.Status != shim.OK {
+			errStr := fmt.Sprintf("Failed to query chaincode. Got error: %s", timeChaincodeResponse.Payload)
+			calculatedEndTime.Errors = append(calculatedEndTime.Errors, fmt.Sprintf("CHAINCODE: %s", errStr))
+			// return shim.Error(errStr)
+	} else {
+		chaincodeCurrentTime = HyperledgerFabricTimestamp{}
+		err = json.Unmarshal(timeChaincodeResponse.Payload, &chaincodeCurrentTime)
+		if err == nil {
+			calculatedEndTime.ChaincodeCurrentTime = chaincodeCurrentTime.CurrentTime
+		}
+	}
+
 	parkingTime.CurrentTimestamps = calculatedEndTime
 	//END
-	
+
 	parkingTime.ParkingEnd = calculatedEndTime.TransactionTime
 
 	delta := parkingTime.ParkingEnd.Sub(parkingTime.ParkingStart)
