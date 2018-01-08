@@ -79,7 +79,7 @@ func (s *SmartContract) SetCurrentTime(APIstub shim.ChaincodeStubInterface, args
 	}
 
 	timestamp := HyperledgerFabricTimestamp{}
-	json.Unmarshal([]byte(args[0]), &timestamp)
+	err := json.Unmarshal([]byte(args[0]), &timestamp)
 	if err != nil {
 		return shim.Error(fmt.Sprintf("Failed to unmarshal timestamp: %s", err))
 	}
