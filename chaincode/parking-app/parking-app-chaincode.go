@@ -549,7 +549,7 @@ func (s *SmartContract) EndParking(APIstub shim.ChaincodeStubInterface, args []s
 	}
 
 	//from time chaincode
-	timeChaincodeResponse := APIstub.InvokeChaincode("time-app", ToChaincodeArgs("GetCurrentTime"), "time-channel")
+	timeChaincodeResponse := APIstub.InvokeChaincode("time-app", ToChaincodeArgs("GetCurrentTime"), "mychannel")
 	if timeChaincodeResponse.Status != shim.OK {
 		errStr := fmt.Sprintf("Failed to query chaincode. Got error: %s", timeChaincodeResponse.Payload)
 		calculatedEndTime.Errors = append(calculatedEndTime.Errors, fmt.Sprintf("CHAINCODE: %s", errStr))
