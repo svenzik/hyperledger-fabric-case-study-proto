@@ -95,6 +95,7 @@ func (s *SmartContract) SetCurrentTime(APIstub shim.ChaincodeStubInterface, args
  * The initLedger method
  */
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
+	s.SetCurrentTime(APIstub, "{\"currentTime\": \"2018-01-07T22:55:57.410017541Z\"}")
 	return shim.Success(nil)
 }
 
