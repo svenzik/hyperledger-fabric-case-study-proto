@@ -18,7 +18,7 @@ if [ "$VERSION" = "1.0" ]; then
 	DEPLOY_COMMAND=instantiate
 fi
 
-cp -v ~/loputoo/hyperledger-fabric-case-study-proto/parking-app/chaincode/parking-app/parking-app-chaincode.go ../chaincode/parking-app/
+# cp -v ~/loputoo/hyperledger-fabric-case-study-proto/parking-app/chaincode/parking-app/parking-app-chaincode.go ../chaincode/parking-app/
 
 echo '#############################################'
 echo '####### STARTING APP ########################'
