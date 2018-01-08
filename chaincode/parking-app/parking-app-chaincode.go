@@ -556,7 +556,7 @@ func (s *SmartContract) EndParking(APIstub shim.ChaincodeStubInterface, args []s
 		calculatedEndTime.Errors = append(calculatedEndTime.Errors, fmt.Sprintf("CHAINCODE: %s", errStr))
 		// return shim.Error(errStr)
 	} else {
-		chaincodeCurrentTime = HyperledgerFabricTimestamp{}
+		chaincodeCurrentTime := HyperledgerFabricTimestamp{}
 		err = json.Unmarshal(timeChaincodeResponse.Payload, &chaincodeCurrentTime)
 		if err == nil {
 			calculatedEndTime.ChaincodeCurrentTime = chaincodeCurrentTime.CurrentTime
