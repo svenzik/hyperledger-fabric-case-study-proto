@@ -88,6 +88,13 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.iextendParkingTime(APIstub, args)
 	} else if function == "EndParking" {
 		return s.EndParking(APIstub, args)
+
+		//parkingspots
+	} else if function == "FindParkingspot" {
+		return s.FindParkingspot(APIstub, args)
+	} else if function == "SaveParkingspot" {
+		return s.SaveParkingspot(APIstub, args)
+
 	} else if function == "initLedger" {
 		return s.initLedger(APIstub)
 	}
@@ -596,6 +603,57 @@ func (s *SmartContract) EndParking(APIstub shim.ChaincodeStubInterface, args []s
 	}
 
 	resultAsBytes, _ := json.Marshal(parkingTime)
+	return shim.Success(resultAsBytes)
+}
+
+func (s *SmartContract) FindParkingspot(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1, FindParkingspot parameter")
+	}
+
+	findParkingspotParameter := FindParkingspotParameter{}
+	err = json.Unmarshal(args[0], &findParkingspotParameter)
+	if err != nil {
+		return shim.Error(fmt.Sprintf("Failed to unmarshal parameter: %s", err))
+	}
+
+	queryString := fmt.Sprintf("{\"selector\": {\"name\": {\"$regex\": \"%s\"}}}", findParkingspotParameter.Name)
+	resultsIterator, err := APIstub.GetQueryResult(queryString)
+	if err != nil {
+		return shim.Error(fmt.Sprintf("Failed to query: %s", err))
+	}
+	defer resultsIterator.Close()
+
+	result, err := s.marshalQueryResult(resultsIterator)
+	return shim.Success(result)
+	//return shim.Success([]byte(result))
+}
+
+func (s *SmartContract) SaveParkingspot(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 2, id and Parkingspot")
+	}
+
+	parkingspot := Parkingspot{}
+	err = json.Unmarshal(args[1], &parkingspot)
+	if err != nil {
+		return shim.Error(fmt.Sprintf("Failed to unmarshal parameter: %s", err))
+	}
+
+	parkingspot.Id = args[0]
+
+	compositeKey, _ := APIstub.CreateCompositeKey("Parkingspot", []string{parkingspot.Id})
+	resultAsBytes, err := json.Marshal(parkingspot)
+	if err != nil {
+		return shim.Error(fmt.Sprintf("Failed to marshal parameter: %s", err))
+	}
+
+	// Add Object JSON to state
+	err = stub.PutState(compositeKey, resultAsBytes)
+	if err != nil {
+		return shim.Error(fmt.Sprintf("Failed to save parkingspot: %s", err))
+	}
+
 	return shim.Success(resultAsBytes)
 }
 

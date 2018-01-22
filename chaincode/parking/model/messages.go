@@ -1,5 +1,7 @@
 package parkingservice
 
-import (
-	// "time"
-)
+// "time"
+
+type FindParkingspotParameter struct {
+	Name string `json:"name"`
+}
