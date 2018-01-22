@@ -612,7 +612,7 @@ func (s *SmartContract) FindParkingspot(APIstub shim.ChaincodeStubInterface, arg
 	}
 
 	findParkingspotParameter := FindParkingspotParameter{}
-	err = json.Unmarshal(args[0], &findParkingspotParameter)
+	err := json.Unmarshal([]byte(args[0]), &findParkingspotParameter)
 	if err != nil {
 		return shim.Error(fmt.Sprintf("Failed to unmarshal parameter: %s", err))
 	}
@@ -625,17 +625,15 @@ func (s *SmartContract) FindParkingspot(APIstub shim.ChaincodeStubInterface, arg
 	defer resultsIterator.Close()
 
 	result, err := s.marshalQueryResult(resultsIterator)
-	return shim.Success(result)
-	//return shim.Success([]byte(result))
+	return shim.Success([]byte(result))
 }
 
 func (s *SmartContract) SaveParkingspot(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 	if len(args) != 1 {
 		return shim.Error("Incorrect number of arguments. Expecting 2, id and Parkingspot")
 	}
-
 	parkingspot := Parkingspot{}
-	err = json.Unmarshal(args[1], &parkingspot)
+	err := json.Unmarshal([]byte(args[1]), &parkingspot)
 	if err != nil {
 		return shim.Error(fmt.Sprintf("Failed to unmarshal parameter: %s", err))
 	}
@@ -649,7 +647,7 @@ func (s *SmartContract) SaveParkingspot(APIstub shim.ChaincodeStubInterface, arg
 	}
 
 	// Add Object JSON to state
-	err = stub.PutState(compositeKey, resultAsBytes)
+	err = APIstub.PutState(compositeKey, resultAsBytes)
 	if err != nil {
 		return shim.Error(fmt.Sprintf("Failed to save parkingspot: %s", err))
 	}
