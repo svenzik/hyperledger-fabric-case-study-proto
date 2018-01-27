@@ -1,5 +1,0 @@
-package parkingservice
-
-import (
-	// "time"
-)
