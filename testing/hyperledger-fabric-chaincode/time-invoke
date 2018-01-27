@@ -1,0 +1,14 @@
+#!/bin/bash
+
+APP=time-app
+
+FUNCTION=$1
+PARAMS=$2
+
+echo Quering app: $APP
+
+docker exec -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp" cli peer chaincode invoke -o orderer.example.com:7050 -C mychannel -n $APP -c "{\"function\":\"$FUNCTION\",\"Args\":[$PARAMS]}" 2>&1
+
+
+#./parkingspot-invoke save '"21","{\"cost\":0,\"costPerMinute\":10,\"id\":\"\",\"parkingEnd\":\"2017-12-18T11:10:24.01Z\",\"parkingStart\":\"2017-12-18T11:10 :24.670575466Z\",\"parkingType\":\"PARKING\",\"parkingspot\":{\"id\":\"1\",\"name\":\"Tartu-Sobra-tee-1-315\",\"owner\":{\"balance\":{\"amount\":0,\"currencyName\":\"EUR\",\"id\":\"1\"},\"id\":\"1\",\"name\":\"John\"}},\"renter\":{\"balance\":{\"amount\":190,\"currencyName\":\"EUR\",\"id\":\"2\"},\"id\":\"\",\"name\":\"Alice\"}}"'
+
