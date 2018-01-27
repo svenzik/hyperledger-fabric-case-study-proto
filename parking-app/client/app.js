@@ -60,14 +60,18 @@ app.config(function($routeProvider) {
 	    $routeProvider
 	    .when("/", {
 		        templateUrl : "main.html",
-		    	controller : "mainController"
+		    		controller : "mainController"
 		        })
 	    .when("/main", {
 		        templateUrl : "main.html",
-		    	controller : "mainController"
+		    		controller : "mainController"
 		        })
 	    .when("/search", {
 		            templateUrl : "search.html"
+		        })
+			.when("/user", {
+		            templateUrl : "user.html",
+								controller : "userController"
 		        })
 	    .when("/parkingtime", {
 		            templateUrl : "parkingtime.html"
@@ -77,4 +81,3 @@ app.config(function($routeProvider) {
 		        })
 	    .otherwise({templateUrl: 'todo.html'});;
 });
-
