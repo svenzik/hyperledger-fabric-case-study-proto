@@ -3,6 +3,7 @@
 'use strict';
 
 var app = angular.module('application', ['ngRoute']);
+var API_PATH = '/api';
 
 // Angular Controller
 app.controller('appController', function($scope, appFactory){
@@ -14,15 +15,19 @@ app.factory('appFactory', function($http){
 
 	var factory = {};
 
-    factory.queryAllTuna = function(callback){
+	factory.getApiPath = function(restEndpoint){
+			return API_PATH + restEndpoint;
+	}
 
-    	$http.get('/get_all_tuna/').success(function(output){
+  factory.queryAllTuna = function(callback){
+
+    	$http.get(factory.getApiPath('/get_all_tuna/')).success(function(output){
 			callback(output)
 		});
 	}
 
 	factory.queryTuna = function(id, callback){
-    	$http.get('/get_tuna/'+id).success(function(output){
+    	$http.get(factory.getApiPath('/get_tuna/'+id)).success(function(output){
 			callback(output)
 		});
 	}
@@ -38,7 +43,7 @@ app.factory('appFactory', function($http){
 		*/
 		var tuna = JSON.stringify(data);
 
-		$http.post('/add_tuna/', tuna)
+		$http.post(factory.getApiPath('/add_tuna/'), tuna)
 			.success(function(output){
 				callback(output)
 			});
@@ -48,7 +53,7 @@ app.factory('appFactory', function($http){
 
 		var holder = data.id + "-" + data.name;
 
-    	$http.get('/change_holder/'+holder).success(function(output){
+    	$http.get(factory.getApiPath('/change_holder/'+holder)).success(function(output){
 			callback(output)
 		});
 	}
@@ -71,7 +76,7 @@ app.config(function($routeProvider) {
 		        })
 			.when("/user", {
 		            templateUrl : "user.html",
-								controller : "userController"
+								controller : "userCtrl"
 		        })
 	    .when("/parkingtime", {
 		            templateUrl : "parkingtime.html"

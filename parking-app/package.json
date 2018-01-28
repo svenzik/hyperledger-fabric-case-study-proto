@@ -10,8 +10,8 @@
     "dependencies": {
         "@uirouter/angularjs": "^1.0.13",
         "angular": "^1.4.3",
-        "body-parser": "latest",
-        "ejs": "latest",
+        "body-parser": "^1.18.2",
+        "ejs": "^2.5.7",
         "express": "^4.16.2",
         "fabric-ca-client": "^1.0.2",
         "fabric-client": "^1.0.2",

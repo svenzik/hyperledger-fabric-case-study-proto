@@ -11,3 +11,5 @@
 
 # fabric sdk node modules
 tuna-app/node_modules/
+*.exe
+*.swp
