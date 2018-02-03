@@ -88,6 +88,13 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.iextendParkingTime(APIstub, args)
 	} else if function == "EndParking" {
 		return s.EndParking(APIstub, args)
+		//user
+	} else if function == "GetUsers" {
+		return s.GetUsers(APIstub, args)
+	} else if function == "GetUser" {
+		return s.GetUser(APIstub, args)
+	} else if function == "SetUser" {
+		return s.SetUser(APIstub, args)
 
 		//parkingspots
 	} else if function == "FindParkingspot" {
@@ -650,6 +657,76 @@ func (s *SmartContract) SaveParkingspot(APIstub shim.ChaincodeStubInterface, arg
 	err = APIstub.PutState(compositeKey, resultAsBytes)
 	if err != nil {
 		return shim.Error(fmt.Sprintf("Failed to save parkingspot: %s", err))
+	}
+
+	return shim.Success(resultAsBytes)
+}
+
+func (s *SmartContract) GetUsers(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+	if len(args) != 0 {
+		return shim.Error("Incorrect number of arguments. Expecting 0")
+	}
+
+	// findParkingspotParameter := FindParkingspotParameter{}
+	// err := json.Unmarshal([]byte(args[0]), &findParkingspotParameter)
+	// if err != nil {
+	// 	return shim.Error(fmt.Sprintf("Failed to unmarshal parameter: %s", err))
+	// }
+	//
+	// queryString := fmt.Sprintf("{\"selector\": {\"name\": {\"$regex\": \"%s\"}}}", findParkingspotParameter.Name)
+	// resultsIterator, err := APIstub.GetQueryResult(queryString)
+
+	// compositeKeyStart, _ := APIstub.CreateCompositeKey("User", []string{0})
+	// compositeKeyEnd, _ := APIstub.CreateCompositeKey("User", []string{9999})
+	resultsIterator, err := APIstub.GetStateByPartialCompositeKey("User", []string{})
+
+	if err != nil {
+		return shim.Error(fmt.Sprintf("Failed to query all users: %s", err))
+	}
+	defer resultsIterator.Close()
+
+	result, err := s.marshalQueryResult(resultsIterator)
+	return shim.Success([]byte(result))
+}
+
+func (s *SmartContract) GetUser(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1, User id")
+	}
+
+	id := args[0]
+	compositeKey, _ := APIstub.CreateCompositeKey("User", []string{id})
+
+	resultAsBytes, err := APIstub.GetState(compositeKey)
+	if err != nil {
+		return shim.Error(fmt.Sprintf("Failed to get user(%s): %s", id, err))
+	}
+
+	return shim.Success(resultAsBytes)
+}
+
+func (s *SmartContract) SetUser(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2, id and User")
+	}
+	user := User{}
+	err := json.Unmarshal([]byte(args[1]), &user)
+	if err != nil {
+		return shim.Error(fmt.Sprintf("Failed to unmarshal parameter: %s", err))
+	}
+
+	user.Id = args[0]
+
+	compositeKey, _ := APIstub.CreateCompositeKey("User", []string{user.Id})
+	resultAsBytes, err := json.Marshal(user)
+	if err != nil {
+		return shim.Error(fmt.Sprintf("Failed to marshal parameter: %s", err))
+	}
+
+	// Add Object JSON to state
+	err = APIstub.PutState(compositeKey, resultAsBytes)
+	if err != nil {
+		return shim.Error(fmt.Sprintf("Failed to save user: %s", err))
 	}
 
 	return shim.Success(resultAsBytes)

@@ -6,10 +6,13 @@ var app = angular.module('application');
 
 // Angular Controller
 app.controller('userCtrl', function($scope, userService){
-	var vm = this;
+	// var vm = this;
+
+	$scope.lastTransactionId = "-";
 
 	$scope.getAllUsers = function(){
 		// console.log("getAllUsers");
+		$scope.allUsers = [];
 		userService.getAllUsers(function(data){
 			var array = [];
 			for (var i = 0; i < data.length; i++){
@@ -22,7 +25,8 @@ app.controller('userCtrl', function($scope, userService){
 			});
 			$scope.allUsers = array;
 		});
-		$scope.allUsers = [{"id": 1, "name":"AAA"}, {"id": 2, "name":"BBB"}];
+		$scope.allUsers.push({"id": 1, "name":"AAA"});
+		$scope.allUsers.push({"id": 2, "name":"BBB"});
 	}
 
 	$scope.showUser = function(id){
@@ -42,12 +46,11 @@ app.controller('userCtrl', function($scope, userService){
 	}
 
 	$scope.saveUser = function(user){
-		console.log(user);
-		$scope.selectedUser = {"id": -1, "name":"save test"};
-		// userService.saveUser(user, function(data){
-		// 	$scope.selectedUser = data;
-		// 	$("#success_create").show();
-		// });
+		// $scope.selectedUser = {"id": -1, "name":"save test"};
+		userService.saveUser(user, function(data){
+			$scope.lastTransactionId = data;
+			$scope.showUser(user.id)
+		});
 	}
 
 	$scope.getAllUsers();

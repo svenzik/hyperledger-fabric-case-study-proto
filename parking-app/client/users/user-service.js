@@ -16,7 +16,8 @@ app.factory('userService', function($http){
 
   factory.getAllUsers = function(callback){
     	$http.get(factory.getApiPath('/users/')).success(function(output){
-			callback(output)
+			console.log("Got JSON: %s", output);
+			callback((output))
 		});
 	}
 
@@ -26,9 +27,10 @@ app.factory('userService', function($http){
 		});
 	}
 
-	factory.saveUser = function(data, callback){
-		var user = JSON.stringify(data);
-		$http.post(factory.getApiPath('/user/'), user)
+	factory.saveUser = function(user, callback){
+		var data = JSON.stringify(user);
+		console.log(data);
+		$http.put(factory.getApiPath('/user/' + user.id), data)
 			.success(function(output){
 				callback(output)
 			});

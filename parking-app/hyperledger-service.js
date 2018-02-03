@@ -8,7 +8,7 @@
 
 // call the packages we need
 var express       = require('express');        // call express
-var app           = express();                 // define our app using express
+// var app           = express();                 // define our app using express
 var bodyParser    = require('body-parser');
 var http          = require('http')
 var fs            = require('fs');
@@ -23,8 +23,8 @@ var HYPERLEDGER_APP_CHANNEL_NAME='mychannel';
 
 module.exports = (function() {
 return{
-	get: function(methodName, params){
-		console.log("getting all tuna from database: ");
+	get: function(methodName, params, res){
+		console.log("HyperledgerService GET: %s(%s)", methodName, params);
 
 		var fabric_client = new Fabric_Client();
 
@@ -79,21 +79,20 @@ return{
 		            console.error("error from query = ", query_responses[0]);
 		        } else {
 		            console.log("Response is ", query_responses[0].toString());
-		            res.json(JSON.parse(query_responses[0].toString()));
+								res.json(JSON.parse(query_responses[0].toString()));
+								// res.json((query_responses[0].toString()));
 		        }
 		    } else {
 		        console.log("No payloads were returned from query");
 		    }
 		}).catch((err) => {
 		    console.error('Failed to query successfully :: ' + err);
+				res.status(500).send({error: err.toString()});
 		});
 	},
-	put: function(methodName, id, model){
-		console.log("submit recording of a tuna catch: ");
-		console.log(req.params);
-		console.log(req.body);
-
-		var message_body = model;
+	put: function(methodName, id, model, res){
+		var message_body = JSON.stringify(model);
+		console.log("HyperledgerService PUT: %s(%s, %s)", methodName, id, message_body);
 
 		var fabric_client = new Fabric_Client();
 
@@ -240,10 +239,10 @@ return{
 		    }
 		}).catch((err) => {
 		    console.error('Failed to invoke successfully :: ' + err);
-				res.send("Could not add parkingspot")
+				res.status(500).send({error: err.toString()});
 		});
 	},
-	getById: function(methodName, key){
+	getById: function(methodName, key, res){
 
 		var fabric_client = new Fabric_Client();
 
@@ -308,7 +307,7 @@ return{
 		    }
 		}).catch((err) => {
 		    console.error('Failed to query successfully :: ' + err);
-		    res.send("Could not locate tuna")
+				res.status(500).send({error: err.toString()});
 		});
 	}
 

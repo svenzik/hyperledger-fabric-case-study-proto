@@ -19,12 +19,12 @@ module.exports = function(app){
   });
 
   app.get('/api/users/', function(req, res){
-    hyperledgerService.get('GetUsers', []);
+    hyperledgerService.get('GetUsers', [], res);
   });
   app.get('/api/user/:id', function(req, res){
-    hyperledgerService.get('GetUser', req.params.id);
+    hyperledgerService.get('GetUser', req.params.id, res);
   });
   app.put('/api/user/:id', function(req, res){
-    hyperledgerService.put('SetUser', req.params.id, req.body);
+    hyperledgerService.put('SetUser', req.params.id, req.body, res);
   });
 }
