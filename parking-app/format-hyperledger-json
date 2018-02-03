@@ -7,4 +7,3 @@ while read blah; do
 		echo $blah | sed -e 's/.*payload://;s/^"//;s/" *$//;s/\\//g' | python -mjson.tool
 	fi
 done < /dev/stdin
-

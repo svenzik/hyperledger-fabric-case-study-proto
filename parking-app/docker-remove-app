@@ -7,5 +7,3 @@ DOCKER_IMAGES=$(docker images | grep $APP_NAME | awk "{print \$3}")
 ##TODO: check if any containers exist
 #docker rm $DOCKER_IAMGES
 docker rmi -f $DOCKER_IMAGES
-
-
