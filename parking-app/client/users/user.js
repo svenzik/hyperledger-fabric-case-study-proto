@@ -38,11 +38,17 @@ app.controller('userCtrl', function($scope, userService){
 	}
 
 	$scope.saveUser = function(user){
+		console.log("Saving");
+		console.log(user);
 		// $scope.selectedUser = {"id": -1, "name":"save test"};
-		userService.saveUser(user, function(data){
-			$scope.lastTransactionId = data;
-			$scope.showUser(user.id)
-		});
+		try {
+			userService.saveUser(user, function(transactionId, data){
+				$scope.lastTransactionId = transactionId;
+				$scope.allUsers.push(data);
+			});
+		} catch(err) { 
+			$scope.lastTransactionId = err.toString();
+		}
 	}
 
 	$scope.getAllUsers();

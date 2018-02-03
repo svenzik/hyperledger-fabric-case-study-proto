@@ -16,11 +16,9 @@
       </div>
 
       <div class="form-group">
-        <label>Update user</label>
-        Enter Key: <input disabled class="form-control" type="text" placeholder="Ex: 11" ng-model="selectedUser.Key">
-        Enter id: <input class="form-control" type="text" placeholder="Ex: 11" ng-model="selectedUser.id">
-        Enter Name: <input class="form-control" type="text" ng-model="selectedUser.name">
-        <input type="submit" value="Create" class="btn btn-primary" ng-click="saveUser(selectedUser)">
-        <h5 style="color:green;margin-bottom:2%" >Last Transaction ID: {{lastTransactionId}}</h5>
+        <label>Update user: {{lastTransactionId}}</label><br/>
+        Id: <input class="form-control" type="text" placeholder="Ex: 11" ng-model="selectedUser.id">
+        Name: <input class="form-control" type="text" ng-model="selectedUser.name">
+        <input type="submit" value="Save" class="btn btn-primary" ng-click="saveUser(selectedUser)">
       </div>
     </div>

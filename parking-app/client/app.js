@@ -75,7 +75,7 @@ app.config(function($routeProvider) {
 		            templateUrl : "search.html"
 		        })
 			.when("/user", {
-		            templateUrl : "user.html",
+		            templateUrl : "users/user.html",
 								controller : "userCtrl"
 		        })
 	    .when("/parkingtime", {
