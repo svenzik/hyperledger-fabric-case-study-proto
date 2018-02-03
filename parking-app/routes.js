@@ -27,4 +27,10 @@ module.exports = function(app){
   app.put('/api/user/:id', function(req, res){
     hyperledgerService.put('SetUser', req.params.id, req.body, res);
   });
+  app.get('/api/huser/:username', function(req, res){
+    hyperledgerService.createHyperledgerFabricUserContext(req.params.username, res);
+  });
+	app.get('/api/login/:username', function(req, res){
+    hyperledgerService.login( req.params.username, res);
+  });
 }
