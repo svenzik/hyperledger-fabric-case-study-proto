@@ -15,14 +15,16 @@ app.factory('userService', function($http){
 	}
 
 	factory.getAllUsers = function(callback){
-			$http.get(factory.getApiPath('/users/')).success(function(output){
-			callback((output))
+		$http.get(factory.getApiPath('/users/'))
+		.then(function(output){
+			callback((output.data));
 		});
 	}
 
 	factory.getUser = function(id, callback){
-			$http.get(factory.getApiPath('/user/'+id)).success(function(output){
-			callback(output)
+		$http.get(factory.getApiPath('/user/'+id))
+			.then(function(output){
+				callback(output.data);
 		});
 	}
 

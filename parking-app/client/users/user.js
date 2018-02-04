@@ -22,7 +22,7 @@ app.controller('userCtrl', function($scope, userService){
 				// array.push(data[i].Record);
 			// }
 			array.sort(function(a, b) {
-					return parseFloat(a.Key) - parseFloat(b.Key);
+					return parseFloat(a.id) - parseFloat(b.id);
 			});
 			$scope.allUsers = array;
 		});
