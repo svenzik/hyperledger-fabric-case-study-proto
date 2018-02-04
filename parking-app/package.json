@@ -1,30 +1,27 @@
 {
-    "name": "parking-app",
-    "version": "1.0.0",
-    "description": "Hyperledger Fabric MOOC Sample Application",
-    "main": "server.js",
-    "scripts": {
-	    "start": "PORT=8001 node server.js",
-	    "start-dev": "PORT=8001 node server.js & browser-sync start --port 18000 --no-open  --proxy 'localhost:8001' --serveStatic './' --files './'"
-    },
-    "dependencies": {
-        "@uirouter/angularjs": "^1.0.13",
-        "angular": "^1.4.3",
-        "body-parser": "^1.18.2",
-        "ejs": "^2.5.7",
-        "express": "^4.16.2",
-        "fabric-ca-client": "^1.0.2",
-        "fabric-client": "^1.0.2",
-        "grpc": "^1.6.0"
-    },
-    "license": "Apache-2.0",
-    "keywords": [
-        "Hyperledger",
-        "Fabric",
-        "Oceans",
-        "Tuna",
-        "Fishing",
-        "Sample",
-        "Application"
-    ]
+		"name": "parking-app",
+		"version": "1.0.0",
+		"description": "Hyperledger Fabric MOOC Sample Application",
+		"main": "server.js",
+		"scripts": {
+			"start": "PORT=8001 node server.js",
+			"start-dev": "PORT=8001 node server.js & browser-sync start --port 18000 --no-open  --proxy 'localhost:8001' --serveStatic './' --files './'"
+		},
+		"dependencies": {
+				"@uirouter/angularjs": "^1.0.13",
+				"angular": "^1.6.9",
+				"angular-bootstrap-datetimepicker": "^1.1.4",
+				"angular-datetime-input": "^5.2.1",
+				"body-parser": "^1.18.2",
+				"ejs": "^2.5.7",
+				"express": "^4.16.2",
+				"fabric-ca-client": "^1.0.2",
+				"fabric-client": "^1.0.2",
+				"grpc": "^1.6.0"
+		},
+		"license": "Apache-2.0",
+		"keywords": [
+				"Hyperledger",
+				"Fabric"
+		]
 }

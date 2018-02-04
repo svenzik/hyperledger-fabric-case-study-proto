@@ -2,12 +2,27 @@
 
 'use strict';
 
-var app = angular.module('application', ['ngRoute']);
+var app = angular.module('application', ['ngRoute', 'ui.bootstrap.datetimepicker']);
 var API_PATH = '/api';
 
 // Angular Controller
-app.controller('appController', function($scope, appFactory){
-
+app.controller('appCtrl', function($scope, appFactory){
+	$scope.hasErrors = false;
+	$scope.errors = [];
+	$scope.closeAlert = function (index) {
+			$scope.errors.splice(index, 1);
+			if ($scope.errors.size() < 1) {
+				$scope.hasErrors = false;
+			}
+	}
+	$scope.showError = function (errorMessage) {
+			$scope.errors.push(errorMessage);
+			$scope.hasErrors = true;
+	}
+	
+	$scope.$on("errorMessage", function (evnt, errorMessage) {
+		$scope.showError(errorMessage);
+	});
 });
 
 // Angular Factory
@@ -19,15 +34,15 @@ app.factory('appFactory', function($http){
 			return API_PATH + restEndpoint;
 	}
 
-  factory.queryAllTuna = function(callback){
+	factory.queryAllTuna = function(callback){
 
-    	$http.get(factory.getApiPath('/get_all_tuna/')).success(function(output){
+			$http.get(factory.getApiPath('/get_all_tuna/')).success(function(output){
 			callback(output)
 		});
 	}
 
 	factory.queryTuna = function(id, callback){
-    	$http.get(factory.getApiPath('/get_tuna/'+id)).success(function(output){
+			$http.get(factory.getApiPath('/get_tuna/'+id)).success(function(output){
 			callback(output)
 		});
 	}
@@ -53,7 +68,7 @@ app.factory('appFactory', function($http){
 
 		var holder = data.id + "-" + data.name;
 
-    	$http.get(factory.getApiPath('/change_holder/'+holder)).success(function(output){
+			$http.get(factory.getApiPath('/change_holder/'+holder)).success(function(output){
 			callback(output)
 		});
 	}
@@ -62,27 +77,28 @@ app.factory('appFactory', function($http){
 });
 
 app.config(function($routeProvider) {
-	    $routeProvider
-	    .when("/", {
-		        templateUrl : "main.html",
-		    		controller : "mainController"
-		        })
-	    .when("/main", {
-		        templateUrl : "main.html",
-		    		controller : "mainController"
-		        })
-	    .when("/search", {
-		            templateUrl : "search.html"
-		        })
+			$routeProvider
+			.when("/", {
+						templateUrl : "main.html",
+						controller : "mainController"
+						})
+			.when("/main", {
+						templateUrl : "main.html",
+						controller : "mainController"
+						})
+			.when("/search", {
+								templateUrl : "parkingspots/parkingspot-reservation.html",
+								controller : "parkingspotCtrl"
+						})
 			.when("/user", {
-		            templateUrl : "users/user.html",
+								templateUrl : "users/user.html",
 								controller : "userCtrl"
-		        })
-	    .when("/parkingtime", {
-		            templateUrl : "parkingtime.html"
-		        })
-	    .when("/about", {
-		            template : "About Parking app."
-		        })
-	    .otherwise({templateUrl: 'todo.html'});;
+						})
+			.when("/parkingtime", {
+								templateUrl : "parkingtime.html"
+						})
+			.when("/about", {
+								template : "About Parking app."
+						})
+			.otherwise({templateUrl: 'todo.html'});;
 });

@@ -2,84 +2,99 @@
 
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Hyperledger Fabric Tuna Application</title>
-    <link rel="icon" href="favicon.png" type="image/gif">
+	<head>
+		<title>Hyperledger Fabric Tuna Application</title>
+		<link rel="icon" href="favicon.png" type="image/gif">
 
-    <!-- require jquery and bootstrap scripts -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-route.min.js"></script>
+		<!-- require jquery and bootstrap scripts -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<!-- <script type="text/javascript" src="node_modules/angular/angular.js"></script> -->
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+		<!-- <script type="text/javascript" src="node_modules/angular/angular-route.js"></script> -->
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-route.min.js"></script>
+		<!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.min.js"></script> -->
+		<!-- requiring the angular page -->
 
-    <!-- requiring the angular page -->
-    <script type="text/javascript" src="app.js"></script>
-    <script type="text/javascript" src="main.js"></script>
-    <script type="text/javascript" src="users/user.js"></script>
-    <script type="text/javascript" src="users/user-service.js"></script>
+		<!-- Date/time picker -->
+		<link rel="stylesheet" href="node_modules/angular-bootstrap-datetimepicker/src/css/datetimepicker.css"/>
+		<script type="text/javascript" src="node_modules/moment/moment.js"></script>
+		<script type="text/javascript" src="node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.js"></script>
+		<script type="text/javascript" src="node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.templates.js"></script>
 
-    <!-- adding style here -->
-    <style type="text/css">
-      .form-group {
-        width:50%;
-      }
-      #body{
-        margin-left:3%;
-        margin-right:3%;
-      }
-      .form-control{
-        margin: 8px;
-      }
-      #right_header{
-        width:20%;
-        font-size:15px;
-        margin-right:0px;
-      }
-      #left_header{
-        margin-left:0;
-        width:40%;
-        display:inline-block;
-      }
-      #id {
-        width:49%;
-        display: inline-block;
-      }
-      table {
-          font-family: arial, sans-serif;
-          border-collapse: collapse;
-          width: 100%;
-      }
-      td, th {
-          border: 1px solid #dddddd;
-          text-align: left;
-          padding: 8px;
-      }
-      tr:nth-child(even) {
-          background-color: #dddddd;
-      }
-    </style>
-  </head>
-  <body ng-app="application" ng-controller="appController">
-    <header>
-      <nav class="navbar navbar-default">
-        <div class="container">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="/">Prototype</a>
-            </div>
+		<script type="text/javascript" src="app.js"></script>
+		<script type="text/javascript" src="apiclient/api-service.js"></script>
+		<script type="text/javascript" src="main.js"></script>
+		<script type="text/javascript" src="users/user.js"></script>
+		<script type="text/javascript" src="users/user-service.js"></script>
+		<script type="text/javascript" src="parkingspots/parkingspot.js"></script>
+		<script type="text/javascript" src="parkingspots/parkingspot-service.js"></script>
 
-            <ul class="nav navbar-nav navbar-left">
-                <li><a href="#user"><i class="fa fa-home"></i>Admin users</a></li>
-                <li><a href="#main"><i class="fa fa-comment"></i>Main</a></li>
-                <li><a href="#search"><i class="fa fa-comment"></i>Search</a></li>
-                <li><a href="#parkingtime"><i class="fa fa-comment"></i>Parkingtime</a></li>
-                <li><a href="#about"><i class="fa fa-shield"></i>About</a></li>
-            </ul>
-        </div>
-      </nav>
-    </header>
+		<!-- adding style here -->
+		<style type="text/css">
+			.form-group {
+				width:50%;
+			}
+			#body{
+				margin-left:3%;
+				margin-right:3%;
+			}
+			.form-control{
+				margin: 8px;
+			}
+			#right_header{
+				width:20%;
+				font-size:15px;
+				margin-right:0px;
+			}
+			#left_header{
+				margin-left:0;
+				width:40%;
+				display:inline-block;
+			}
+			#id {
+				width:49%;
+				display: inline-block;
+			}
+			table {
+					font-family: arial, sans-serif;
+					border-collapse: collapse;
+					width: 100%;
+			}
+			td, th {
+					border: 1px solid #dddddd;
+					text-align: left;
+					padding: 8px;
+			}
+			tr:nth-child(even) {
+					background-color: #dddddd;
+			}
+		</style>
+	</head>
+	<body ng-app="application" ng-controller="appCtrl">
+		<header>
+			<nav class="navbar navbar-default">
+				<div class="container">
+						<div class="navbar-header">
+								<a class="navbar-brand" href="/">Prototype</a>
+						</div>
 
-    <ng-view></ng-view>
+						<ul class="nav navbar-nav navbar-left">
+								<li><a href="#user"><i class="fa fa-home"></i>Admin users</a></li>
+								<li><a href="#search"><i class="fa fa-comment"></i>Search parkingspot</a></li>
+								<li><a href="#main"><i class="fa fa-comment"></i>Main</a></li>
+								<li><a href="#about"><i class="fa fa-shield"></i>About</a></li>
+						</ul>
+				</div>
+			</nav>
+		</header>
 
-  </body>
+		<div ng-show="hasErrors">
+			<alert style="color: red;" ng-repeat="error in errors track by $index" type="danger" close="closeAlert($index)">{{error}}</alert>
+		</div>
+		
+		<ng-view></ng-view>
+
+	</body>
 </html>

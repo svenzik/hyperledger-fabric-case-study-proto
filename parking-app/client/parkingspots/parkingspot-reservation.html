@@ -1,0 +1,65 @@
+		<div id="body">
+			<div class="form-group">
+				X: <input class="form-control" type="text" ng-model="parkingspotQuery.x">
+				Y: <input class="form-control" type="text" ng-model="parkingspotQuery.y">
+				Start: <input class="form-control" type="text" datetime="dd.MM.yyyy HH:mm:ss" datetime-model="yyyy-MM-ddTHH:mm:ss" ng-model="parkingspotQuery.startTime">
+				End: <input class="form-control" type="text" datetime="dd.MM.yyyy HH:mm:ss" ng-model="parkingspotQuery.endTime">
+				<div class="dropdown form-group dropdown-start-parent">
+				<label>Start Date</label>
+				<a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target=".dropdown-start-parent"
+				   href="#">
+					<div class="input-group date">
+						<input type="text" class="form-control" data-ng-model="dateRangeStart">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+					</div>
+				</a>
+				<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+					<datetimepicker data-ng-model="dateRangeStart"
+									data-datetimepicker-config="{ dropdownSelector: '#dropdownStart', renderOn: 'end-date-changed' }"
+									data-on-set-time="startDateOnSetTime()"
+									data-before-render="startDateBeforeRender($dates)"></datetimepicker>
+				</ul>
+			</div>
+
+			<div class="dropdown form-group dropdown-end-parent">
+				<label>End Date</label>
+				<a class="dropdown-toggle" id="dropdownEnd" role="button" data-toggle="dropdown" data-target=".dropdown-end-parent"
+				   href="#">
+					<div class="input-group date">
+						<input type="text" class="form-control" data-ng-model="dateRangeEnd">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+					</div>
+				</a>
+				<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+					<datetimepicker data-ng-model="dateRangeEnd"
+									data-datetimepicker-config="{ dropdownSelector: '#dropdownEnd', renderOn: 'start-date-changed' }"
+									data-on-set-time="endDateOnSetTime()"
+									data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
+				</ul>
+			</div>
+				<input type="submit" value="Search" class="btn btn-primary" ng-click="search(parkingspotQuery)">
+			</div>
+
+			<table id="all_users" class="table" align="center">
+				<tr>
+					<th>ID</th>
+					<th>Type</th>
+					<th>Start</th>
+					<th>End</th>
+					<th>Cost per minute</th>
+					<th>Cost for time</th>
+					<th>Parkingspot</th>
+				</tr>
+				<tr ng-repeat="parkingspot in parkingspotQueryResults" ng-click="showParkingspot(parkingspot.id)">
+					<td>{{parkingspot.Id}}</td>
+					<td>{{parkingspot.parkingType}}</td>
+					<td>{{parkingspot.parkingStart | date:'dd.MM.yyyy HH:mm:ss Z' }}</td>
+					<td>{{parkingspot.parkingEnd | date:'dd.MM.yyyy HH:mm:ss Z' }}</td>
+					<td>{{parkingspot.costPerMinute}}</td>
+					<td>{{parkingspot.cost}}</td>
+					<td>{{parkingspot.parkingspot.name}}</td>
+				</tr>
+			</table>
+			<label>Update parkingspot: {{lastTransactionId}}</label><br/>
+
+		</div>

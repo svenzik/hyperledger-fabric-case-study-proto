@@ -1,0 +1,9 @@
+#!/bin/bash
+
+while read blah; do
+	if [[ $blah == *"Chaincode invoke successful. result"* ]]
+	then
+		#echo $blah| grep 'Chaincode invoke successful. result' | sed -e 's/.*payl oad://;s/^"//;s/" *$//;s/\\//g' | python -mjson.tool
+		echo $blah | sed -e 's/.*payload://;s/^"//;s/" *$//;s/\\//g' | python -mjson.tool
+	fi
+done < /dev/stdin

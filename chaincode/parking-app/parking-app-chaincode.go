@@ -66,22 +66,22 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.getParkingTimeC(APIstub, args)
 	} else if function == "getParkingTimeK" {
 		return s.getParkingTime(APIstub, args)
-	} else if function == "findParkingTime" {
-		return s.findParkingTime(APIstub, args)
-	} else if function == "findBetweenTime" {
-		return s.findBetweenTime(APIstub, args)
 	} else if function == "save" { //GENERIC save for debugging
 		return s.saveCD(APIstub, args)
 	} else if function == "saveC" { //GENERIC save for debugging
 		return s.saveC(APIstub, args)
 	} else if function == "saveCD" { //GENERIC save for debugging
 		return s.saveCD(APIstub, args)
+	} else if function == "getAll" {
+		return s.getAll(APIstub)
+		
 	} else if function == "saveReservation" {
 		return s.saveReservation(APIstub, args)
 	} else if function == "saveParkingtime" {
 		return s.saveParkingtime(APIstub, args)
-	} else if function == "getAll" {
-		return s.getAll(APIstub)
+
+	} else if function == "findBetweenTime" {
+		return s.findBetweenTime(APIstub, args)
 	} else if function == "extendParkingTime" {
 		return s.extendParkingTime(APIstub, args)
 	} else if function == "iextendParkingTime" {
@@ -96,7 +96,10 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 	} else if function == "SetUser" {
 		return s.SetUser(APIstub, args)
 
-		//parkingspots
+	} else if function == "findByQuery" {
+		return s.findByQuery(APIstub, args)
+	
+	//parkingspots
 	} else if function == "FindParkingspot" {
 		return s.FindParkingspot(APIstub, args)
 	} else if function == "SaveParkingspot" {
@@ -176,11 +179,11 @@ func (s *SmartContract) getParkingTimeC(APIstub shim.ChaincodeStubInterface, arg
 }
 
 /*
- * The findParkingTime method *
+ * The findByQuery method *
 Used to search the records of one particular tuna
 It takes one argument -- the coudhDB query string for the tuna in question
 */
-func (s *SmartContract) findParkingTime(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (s *SmartContract) findByQuery(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	if len(args) != 1 {
 		return shim.Error("Incorrect number of arguments. Expecting 1")
@@ -196,7 +199,7 @@ func (s *SmartContract) findParkingTime(APIstub shim.ChaincodeStubInterface, arg
 	defer resultsIterator.Close()
 
 	result, err := s.marshalQueryResult(resultsIterator)
-	fmt.Printf("- findParkingTime:\n%s\n", result)
+	fmt.Printf("- findByQuery:\n%s\n", result)
 
 	return shim.Success([]byte(result))
 }
