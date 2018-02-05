@@ -16,7 +16,7 @@ app.factory('parkingspotService', function(apiService){
 
 	factory.searchParkingspot = function(parkingspotQuery){
 		var s = parkingspotQuery;
-		return apiService.get(`/parkingspot/search/reservation/x/${s.x}/y/${s.y}/startTime/${s.startTime.toISOString()}/endTime/${s.endTime.toISOString()}/`)
+		return apiService.get(`/parkingspot/search/reservation/x/${s.x}/y/${s.y}/startTime/${s.startTime}/endTime/${s.endTime}/`)
 		.then(result => {
 			return result.data;
 		});

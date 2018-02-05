@@ -812,7 +812,7 @@ func (s *SmartContract) put(APIstub shim.ChaincodeStubInterface, id string, park
 
 // func (s *SmartContract) findParkingspotOverlaping(APIstub shim.ChaincodeStubInterface, ParkingStart time.Time, ParkingEnd time.Time) (shim.StateQueryIteratorInterface, error) {
 func (s *SmartContract) findParkingspotOverlaping(APIstub shim.ChaincodeStubInterface, ParkingStart string, ParkingEnd string) (shim.StateQueryIteratorInterface, error) {
-	queryString := fmt.Sprintf("{\"selector\": {\"parkingStart\": {\"$lte\": \"%s\"}, \"parkingEnd\": {\"$gte\": \"%s\"}, \"parkingType\": {\"$ne\": \"FREE\"}}}", ParkingEnd, ParkingStart)
+	queryString := fmt.Sprintf("{\"selector\": {\"parkingStart\": {\"$lte\": \"%s\"}, \"parkingEnd\": {\"$gte\": \"%s\"}}}", ParkingStart, ParkingEnd)
 	resultsIterator, err := APIstub.GetQueryResult(queryString)
 	if err != nil {
 		return resultsIterator, err

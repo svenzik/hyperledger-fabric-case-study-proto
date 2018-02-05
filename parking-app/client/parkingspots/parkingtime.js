@@ -15,8 +15,8 @@ app.controller('parkingtimeCtrl', function($scope, parkingspotService){
 	$scope.parkingspotQuery = {
 		"x": 0,
 		"y": 0,
-		"startTime": new Date(),
-		"endTime": suggestedEndDate
+		"startTime": new Date().toISOString(),
+		"endTime": suggestedEndDate.toISOString()
 	}
 	$scope.parkingspotQueryResults = [];
 
@@ -28,29 +28,6 @@ app.controller('parkingtimeCtrl', function($scope, parkingspotService){
 		}).catch(err => {
 			$scope.$emit('errorMessage', "Internal error: " + err.getMessage());
 		});
-	}
-
-	$scope.showUser = function(id){
-		// console.log("showUser:" + id);
-		// $scope.selectedUser = {"id": id, "name":"show test"};
-		parkingspotService.getUser(id, function(data){
-			data.json = JSON.stringify(data);
-			$scope.selectedUser = data;
-		});
-	}
-
-	$scope.saveUser = function(user){
-		console.log("Saving");
-		console.log(user);
-		// $scope.selectedUser = {"id": -1, "name":"save test"};
-		try {
-			parkingspotService.saveUser(user, function(transactionId, data){
-				$scope.lastTransactionId = transactionId;
-				$scope.allUsers.push(data);
-			});
-		} catch(err) { 
-			$scope.lastTransactionId = err.toString();
-		}
 	}
 
 });
