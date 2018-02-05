@@ -5,7 +5,7 @@
 var app = angular.module('application');
 
 // Angular Controller
-app.controller('parkingtimetCtrl', function($scope, parkingspotService){
+app.controller('parkingtimeCtrl', function($scope, parkingspotService){
 	// var vm = this;
 
 	$scope.lastTransactionId = "-";
