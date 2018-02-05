@@ -5,9 +5,11 @@
 var app = angular.module('application');
 
 // Angular Controller
-app.controller('parkingspotCtrl', function($scope, parkingspotService, userService){
+app.controller('parkingspotCtrl', function($scope, $routeParams, parkingspotService, userService){
 	// var vm = this;
 	$scope.lastTransactionId = "-";
+	
+	var userId = $routeParams.id;
 
 	$scope.parkingSpotParkingTimes = [];
 	$scope.selectedParkingspot = {
@@ -93,7 +95,7 @@ app.controller('parkingspotCtrl', function($scope, parkingspotService, userServi
 
 	// $scope.search();
 	// var userId = 0;
-	userService.login(1)
+	userService.login(userId)
 		.then(user => {
 			$scope.userId = user.id;
 			// $scope.search(user.id);
