@@ -256,18 +256,25 @@ func (s *SmartContract) findBetweenTime(APIstub shim.ChaincodeStubInterface, arg
  * The initLedger method
  */
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
+	psSelver := Parkingspot{Id: "1", Name: "Tartu-Sobra-tee-1-315", CostPerMinute: CurrencyAmount{CurrencyName: "EUR", Amount: 10}, Owner: User{Id: "1", Name: "Prisma", Balance: Balance{CurrencyName: "EUR", Amount: 100}}}
+	psRimi := Parkingspot{Id: "2", Name: "Tartu-Sobra-tee-2-1", CostPerMinute: CurrencyAmount{CurrencyName: "EUR", Amount: 13}, Owner: User{Id: "2", Name: "Rimi", Balance: Balance{CurrencyName: "EUR", Amount: 200}}}
 	
-	parkingSpotBytes, _ := json.Marshal(ParkingTime{ParkingStart: time.Now(), ParkingEnd: time.Now().Add(8 * time.Hour), CostPerMinute: 10, Parkingspot: Parkingspot{Id: "1", Name: "Tartu-Sobra-tee-1-315"}})
+	parkingSpotBytes, _ := json.Marshal(psSelver)
+	s.SaveParkingspot(APIstub, []string{"1", fmt.Sprintf("%s", parkingSpotBytes)})
+	parkingSpotBytes, _ = json.Marshal(psRimi)
+	s.SaveParkingspot(APIstub, []string{"2", fmt.Sprintf("%s", parkingSpotBytes)})
+	
+	parkingSpotBytes, _ = json.Marshal(ParkingTime{ParkingStart: time.Now(), ParkingEnd: time.Now().Add(8 * time.Hour), CostPerMinute: 10, Parkingspot: Parkingspot{Id: "1", Name: "Tartu-Sobra-tee-1-315"}})
 	s.saveParkingtimeOpenTime(APIstub,  []string{"100", fmt.Sprintf("%s", parkingSpotBytes)})
 	parkingSpotBytes, _ = json.Marshal(ParkingTime{ParkingStart: time.Now(), ParkingEnd: time.Now().Add(8 * time.Hour), CostPerMinute: 12, Parkingspot: Parkingspot{Id: "2", Name: "Tartu-Sobra-tee-2-1"}})
 	s.saveParkingtimeOpenTime(APIstub,  []string{"101", fmt.Sprintf("%s", parkingSpotBytes)})
 	
 	parkingSpot := []ParkingTime{
-		ParkingTime{ParkingStart: time.Now(), ParkingEnd: time.Now(), CostPerMinute: 10, Parkingspot: Parkingspot{Id: "1", Name: "Tartu-Sobra-tee-1-315"}},
-		ParkingTime{ParkingStart: time.Now().Add(2 * time.Minute), ParkingEnd: time.Now().Add(5 * time.Minute), CostPerMinute: 10, Parkingspot: Parkingspot{Id: "1", Name: "Tartu-Sobra-tee-1-315"}},
-		ParkingTime{ParkingStart: time.Now().Add(10 * time.Minute), ParkingEnd: time.Now().Add(30 * time.Minute), CostPerMinute: 10, Parkingspot: Parkingspot{Id: "1", Name: "Tartu-Sobra-tee-1-315"}},
-		ParkingTime{ParkingStart: time.Now().Add(31 * time.Minute), ParkingEnd: time.Now().Add(45 * time.Minute), CostPerMinute: 10, Parkingspot: Parkingspot{Id: "1", Name: "Tartu-Sobra-tee-1-315"}},
-		ParkingTime{ParkingStart: time.Now().Add(46 * time.Minute), ParkingEnd: time.Now().Add(105 * time.Minute), CostPerMinute: 10, Parkingspot: Parkingspot{Id: "2", Name: "Tartu-Sobra-tee-2-1"}},
+		ParkingTime{ParkingStart: time.Now(), ParkingEnd: time.Now(), CostPerMinute: 10, Parkingspot: psSelver},
+		ParkingTime{ParkingStart: time.Now().Add(2 * time.Minute), ParkingEnd: time.Now().Add(5 * time.Minute), CostPerMinute: 10, Parkingspot: psSelver},
+		ParkingTime{ParkingStart: time.Now().Add(10 * time.Minute), ParkingEnd: time.Now().Add(30 * time.Minute), CostPerMinute: 10, Parkingspot: psSelver},
+		ParkingTime{ParkingStart: time.Now().Add(31 * time.Minute), ParkingEnd: time.Now().Add(45 * time.Minute), CostPerMinute: 10, Parkingspot: psSelver},
+		ParkingTime{ParkingStart: time.Now().Add(46 * time.Minute), ParkingEnd: time.Now().Add(105 * time.Minute), CostPerMinute: 10, Parkingspot: psRimi},
 	}
 
 	i := 0
