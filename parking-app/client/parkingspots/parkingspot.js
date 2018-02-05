@@ -23,7 +23,14 @@ app.controller('parkingspotCtrl', function($scope, parkingspotService, userServi
 		},
 		"owner" : userService.getCurrentUser()
 	}
-	// $scope.parkingtime = {};
+	
+	$scope.newParkingtime = {
+		"id":"201",
+		"parkingEnd": new Date().toISOString(),
+		"parkingStart": new Date().toISOString(),
+		"costPerMinute": 10,
+		
+	};
 
 	$scope.search = function(){
 		var result = parkingspotService.getUserParkingspots($scope.userId);
@@ -37,6 +44,9 @@ app.controller('parkingspotCtrl', function($scope, parkingspotService, userServi
 	$scope.showParkingspotSchedule = function(parkingspotId){
 		parkingspotService.getParkingtimes(parkingspotId)
 		.then(parkingtimesList => {
+			parkingtimesList.sort(function(a, b) {
+					return a - b;
+			});
 			$scope.parkingSpotParkingTimes = parkingtimesList;
 		}).catch(err => {
 			$scope.$emit('errorMessage', "Internal error: " + err.message);
@@ -45,7 +55,7 @@ app.controller('parkingspotCtrl', function($scope, parkingspotService, userServi
 	
 	$scope.editSchedule = function(parkingtime){
 		console.log("Selected parkingtime");
-		console.log(parkingtime);
+		console.log(JSON.stringify(parkingtime));
 		$scope.newParkingtime = parkingtime;
 	}
 	
