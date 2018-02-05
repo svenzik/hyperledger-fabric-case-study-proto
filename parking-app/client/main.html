@@ -16,6 +16,7 @@
           <th>Cost per minute</th>
           <th>Cost for time</th>
           <th>Parkingspot</th>
+          <th>Parkingspot.id</th>
         </tr>
 
         <tr ng-repeat="result in all_parkingspots">
@@ -27,6 +28,7 @@
           <td>{{result.costPerMinute}}</td>
           <td>{{result.cost}}</td>
           <td>{{result.parkingspot.name}}</td>
+          <td>{{result.parkingspot.id}}</td>
         </tr>
       </table>
 

@@ -68,4 +68,5 @@ app.controller('mainController', function($scope, appFactory){
 		});
 	}
 
+	$scope.queryAllTuna();
 });

@@ -5,8 +5,7 @@
 var app = angular.module('application');
 
 // Angular Factory
-app.factory('userService', function($http){
-
+app.factory('userService', function($http, apiService){
 	var factory = {};
 
 	factory.getApiPath = function(restEndpoint){
@@ -56,5 +55,17 @@ app.factory('userService', function($http){
 	// 	});
 	}
 	
+	factory.login = function(id){
+		return apiService.get('/user/'+id)
+		.then(result => {
+			factory.currentUser = result.data;
+			return result.data;
+		});
+	}
+
+	factory.getCurrentUser = function(){
+		return factory.currentUser;
+	}
+
 	return factory;
 });

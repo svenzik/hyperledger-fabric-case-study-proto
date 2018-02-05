@@ -75,10 +75,14 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 	} else if function == "getAll" {
 		return s.getAll(APIstub)
 		
+	} else if function == "saveParkingtimeOpenTime" {
+		return s.saveParkingtimeOpenTime(APIstub, args)
 	} else if function == "saveReservation" {
 		return s.saveReservation(APIstub, args)
 	} else if function == "saveParkingtime" {
 		return s.saveParkingtime(APIstub, args)
+	} else if function == "getParkingtimesForParkingspot" {
+		return s.getParkingtimesForParkingspot(APIstub, args)
 
 	} else if function == "findBetweenTime" {
 		return s.findBetweenTime(APIstub, args)
@@ -104,12 +108,20 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.FindParkingspot(APIstub, args)
 	} else if function == "SaveParkingspot" {
 		return s.SaveParkingspot(APIstub, args)
+		// return s.ForwardRequestToService(s.SaveParkingspot, APIstub, args)
 
 	} else if function == "initLedger" {
 		return s.initLedger(APIstub)
 	}
 
 	return shim.Error(fmt.Sprintf("Invalid Smart Contract function name: %s", function))
+}
+
+/**
+ * Used to forward request to specific apiService
+ */
+func (s *SmartContract) ForwardRequestToService(fp func(shim.ChaincodeStubInterface, []string) sc.Response, APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+	return fp(APIstub, args)
 }
 
 /*
@@ -204,6 +216,23 @@ func (s *SmartContract) findByQuery(APIstub shim.ChaincodeStubInterface, args []
 	return shim.Success([]byte(result))
 }
 
+func (s *SmartContract) getParkingtimesForParkingspot(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
+
+	ParkingspotId := args[0]
+	queryString := fmt.Sprintf("{\"selector\": {\"parkingspot.id\": {\"$eq\": \"%s\"}}}", ParkingspotId)
+	resultsIterator, err := APIstub.GetQueryResult(queryString)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	defer resultsIterator.Close()
+
+	result, err := s.marshalQueryResult(resultsIterator)
+	return shim.Success([]byte(result))
+}
+
 func (s *SmartContract) findBetweenTime(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 	if len(args) != 2 {
 		return shim.Error("Incorrect number of arguments. Expecting 2")
@@ -225,12 +254,18 @@ func (s *SmartContract) findBetweenTime(APIstub shim.ChaincodeStubInterface, arg
  * The initLedger method
  */
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
+	
+	parkingSpotBytes, _ := json.Marshal(ParkingTime{ParkingStart: time.Now(), ParkingEnd: time.Now().Add(8 * time.Hour), CostPerMinute: 10, Parkingspot: Parkingspot{Id: "1", Name: "Tartu-Sobra-tee-1-315"}})
+	s.saveParkingtimeOpenTime(APIstub,  []string{"100", fmt.Sprintf("%s", parkingSpotBytes)})
+	parkingSpotBytes, _ = json.Marshal(ParkingTime{ParkingStart: time.Now(), ParkingEnd: time.Now().Add(8 * time.Hour), CostPerMinute: 12, Parkingspot: Parkingspot{Id: "2", Name: "Tartu-Sobra-tee-2-1"}})
+	s.saveParkingtimeOpenTime(APIstub,  []string{"101", fmt.Sprintf("%s", parkingSpotBytes)})
+	
 	parkingSpot := []ParkingTime{
-		ParkingTime{ParkingStart: time.Now(), ParkingEnd: time.Now(), CostPerMinute: 10, Parkingspot: Parkingspot{Name: "Tartu-Sobra-tee-1-315"}},
-		ParkingTime{ParkingStart: time.Now().Add(2 * time.Minute), ParkingEnd: time.Now().Add(5 * time.Minute), CostPerMinute: 10, Parkingspot: Parkingspot{Name: "Tartu-Sobra-tee-1-315"}},
-		ParkingTime{ParkingStart: time.Now().Add(10 * time.Minute), ParkingEnd: time.Now().Add(30 * time.Minute), CostPerMinute: 10, Parkingspot: Parkingspot{Name: "Tartu-Sobra-tee-1-315"}},
-		ParkingTime{ParkingStart: time.Now().Add(31 * time.Minute), ParkingEnd: time.Now().Add(45 * time.Minute), CostPerMinute: 10, Parkingspot: Parkingspot{Name: "Tartu-Sobra-tee-1-315"}},
-		ParkingTime{ParkingStart: time.Now().Add(46 * time.Minute), ParkingEnd: time.Now().Add(105 * time.Minute), CostPerMinute: 10, Parkingspot: Parkingspot{Name: "Tartu-Sobra-tee-1-315"}},
+		ParkingTime{ParkingStart: time.Now(), ParkingEnd: time.Now(), CostPerMinute: 10, Parkingspot: Parkingspot{Id: "1", Name: "Tartu-Sobra-tee-1-315"}},
+		ParkingTime{ParkingStart: time.Now().Add(2 * time.Minute), ParkingEnd: time.Now().Add(5 * time.Minute), CostPerMinute: 10, Parkingspot: Parkingspot{Id: "1", Name: "Tartu-Sobra-tee-1-315"}},
+		ParkingTime{ParkingStart: time.Now().Add(10 * time.Minute), ParkingEnd: time.Now().Add(30 * time.Minute), CostPerMinute: 10, Parkingspot: Parkingspot{Id: "1", Name: "Tartu-Sobra-tee-1-315"}},
+		ParkingTime{ParkingStart: time.Now().Add(31 * time.Minute), ParkingEnd: time.Now().Add(45 * time.Minute), CostPerMinute: 10, Parkingspot: Parkingspot{Id: "1", Name: "Tartu-Sobra-tee-1-315"}},
+		ParkingTime{ParkingStart: time.Now().Add(46 * time.Minute), ParkingEnd: time.Now().Add(105 * time.Minute), CostPerMinute: 10, Parkingspot: Parkingspot{Id: "2", Name: "Tartu-Sobra-tee-2-1"}},
 	}
 
 	i := 0
@@ -332,6 +367,20 @@ func (s *SmartContract) saveCD(APIstub shim.ChaincodeStubInterface, args []strin
 	}
 
 	return shim.Success(resultAsBytes)
+}
+
+func (s *SmartContract) saveParkingtimeOpenTime(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+	parkingTime, err := s.unmarshal(args[1])
+	if err != nil {
+		return shim.Error(fmt.Sprintf("Failed to unmarshal parkingTime: %s", args[1]))
+	}
+
+	parkingTime.ParkingType = "FREE"
+	result, err := s.put(APIstub, args[0], parkingTime)
+	if err != nil {
+		return shim.Error(fmt.Sprintf("Failed to persist reservation: %s", err))
+	}
+	return shim.Success(result)
 }
 
 func (s *SmartContract) saveReservation(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
@@ -627,7 +676,7 @@ func (s *SmartContract) FindParkingspot(APIstub shim.ChaincodeStubInterface, arg
 		return shim.Error(fmt.Sprintf("Failed to unmarshal parameter: %s", err))
 	}
 
-	queryString := fmt.Sprintf("{\"selector\": {\"name\": {\"$regex\": \"%s\"}}}", findParkingspotParameter.Name)
+	queryString := fmt.Sprintf("{\"selector\": {\"name\": {\"$regex\": \"%s\"}, \"owner.id\": {\"$eq\": \"%s\"}}}", findParkingspotParameter.Name, findParkingspotParameter.OwnerId)
 	resultsIterator, err := APIstub.GetQueryResult(queryString)
 	if err != nil {
 		return shim.Error(fmt.Sprintf("Failed to query: %s", err))

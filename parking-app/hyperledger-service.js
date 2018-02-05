@@ -64,12 +64,28 @@ return{
 						throw new Error('Failed to get user1.... run registerUser.js');
 				}
 
-				// queryAllTuna - requires no arguments , ex: args: [''],
+				var stringParams = params;
+				if (params instanceof Array) {
+					stringParams = params.map(el => {
+						// console.log("Converting: ");
+						// console.log(el);
+						if(el instanceof Object) {
+							// console.log("Converted: ");
+							// console.log(JSON.stringify(el));
+							return JSON.stringify(el);
+						} else {
+							return el;
+						}
+						
+					});
+				}
+				console.log("Calling chaincode: " + methodName + " " + stringParams);
+				console.log(stringParams);
 				const request = {
 						chaincodeId: HYPERLEDGER_APP_NAME,
 						txId: tx_id,
 						fcn: methodName,
-						args: params
+						args: stringParams
 				};
 
 				// send the query proposal to the peer
@@ -80,6 +96,8 @@ return{
 				if (query_responses && query_responses.length == 1) {
 						if (query_responses[0] instanceof Error) {
 								console.error("error from query = ", query_responses[0]);
+								res.status(500).send({error: query_responses[0].toString()});
+						
 						} else {
 								var resultJsonText = query_responses[0].toString();
 								console.log("Response is ", resultJsonText);
@@ -299,8 +317,8 @@ return{
 				if (query_responses && query_responses.length == 1) {
 						if (query_responses[0] instanceof Error) {
 								console.error("error from query = ", query_responses[0]);
-								res.send("Could not locate tuna")
-
+								res.status(500).send({error: query_responses[0].toString()});
+						
 						} else {
 								console.log("Response is ", query_responses[0].toString());
 								res.send(query_responses[0].toString())

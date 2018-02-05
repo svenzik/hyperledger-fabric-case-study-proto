@@ -50,5 +50,48 @@ app.factory('parkingspotService', function(apiService){
 	// 	});
 	}
 	
+	factory.getUserParkingspots = function(ownerId) {
+		return apiService.get(`/parkingspot/owner/${ownerId}`)
+		.then(result => {
+			return result.data;
+		});
+	}
+	
+	factory.getParkingtimes = function(parkingspotId) {
+		return apiService.get(`/parkingspot/${parkingspotId}/parkingtimes`)
+		.then(result => {
+			return result.data;
+		}).catch(err => {
+			throw new Error(err.data.error);
+		});
+	}
+
+	factory.saveParkingtime = function(parkingtime) {
+		return apiService.post(`/parkingtime/${parkingtime.id}`, parkingtime)
+		.then(result => {
+			return result.data;
+		}).catch(err => {
+			throw new Error(err.data.error);
+		});
+	}
+	
+	factory.saveParkingtimeReservation = function(parkingtime) {
+		return apiService.post(`/parkingtime/${parkingtime.id}/reserve`, parkingtime)
+		.then(result => {
+			return result.data;
+		}).catch(err => {
+			throw new Error(err.data.error);
+		});
+	}
+
+	factory.saveParkingspotOpenHours = function(parkingtime) {
+		return apiService.post(`/parkingspot/${parkingtime.parkingspot.id}/open`, parkingtime)
+		.then(result => {
+			return result.data;
+		}).catch(err => {
+			throw new Error(err.data.error);
+		});
+	}
+
 	return factory;
 });

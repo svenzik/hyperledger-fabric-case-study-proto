@@ -82,20 +82,21 @@ app.config(function($routeProvider) {
 						templateUrl : "main.html",
 						controller : "mainController"
 						})
-			.when("/main", {
-						templateUrl : "main.html",
-						controller : "mainController"
+			.when("/parkingspots/user", {
+								templateUrl : "parkingspots/parkingspot-management.html",
+								controller : "parkingspotCtrl"
 						})
 			.when("/search", {
 								templateUrl : "parkingspots/parkingspot-reservation.html",
-								controller : "parkingspotCtrl"
+								controller : "parkingtimeCtrl"
 						})
+			.when("/parkingtimes/all", {
+				templateUrl : "main.html",
+				controller : "mainController"
+			})
 			.when("/user", {
 								templateUrl : "users/user.html",
 								controller : "userCtrl"
-						})
-			.when("/parkingtime", {
-								templateUrl : "parkingtime.html"
 						})
 			.when("/about", {
 								template : "About Parking app."

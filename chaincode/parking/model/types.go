@@ -2,13 +2,14 @@ package parkingservice
 
 import (
 	"time"
+	"github.com/shopspring/decimal"
 )
 
 type ParkingTime struct {
 	Id                string           `json:"id"`
 	ParkingStart      time.Time        `json:"parkingStart"`
 	ParkingEnd        time.Time        `json:"parkingEnd"`
-	ParkingType       string           `json:"parkingType"` //RESERVATION,PARKING
+	ParkingType       string           `json:"parkingType"` //RESERVATION,PARKING,FREE
 	CostPerMinute     int              `json:"costPerMinute"`
 	Cost              int              `json:"cost"`
 	Parkingspot       Parkingspot      `json:"parkingspot"`
@@ -19,6 +20,7 @@ type ParkingTime struct {
 type Parkingspot struct {
 	Id            string         `json:"id"`
 	Name          string         `json:"name"`
+	Location      ParkingSpotLocation `json:"location"`
 	CostPerMinute CurrencyAmount `json:"costPerMinute"`
 	Owner         User           `json:"owner"`
 }
@@ -27,6 +29,11 @@ type User struct {
 	Id      string  `json:"id"`
 	Name    string  `json:"name"`
 	Balance Balance `json:"balance"`
+}
+
+type ParkingSpotLocation struct {
+	X       decimal.Decimal `json:"x"`
+	Y       decimal.Decimal `json:"y"`
 }
 
 type CurrencyAmount struct {

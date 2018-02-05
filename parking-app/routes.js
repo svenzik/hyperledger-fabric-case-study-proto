@@ -22,7 +22,7 @@ module.exports = function(app){
 		hyperledgerService.get('GetUsers', [], res);
 	});
 	app.get('/api/user/:id', function(req, res){
-		hyperledgerService.get('GetUser', req.params.id, res);
+		hyperledgerService.get('GetUser', [req.params.id], res);
 	});
 	app.put('/api/user/:id', function(req, res){
 		hyperledgerService.put('SetUser', req.params.id, req.body, res);
@@ -35,12 +35,26 @@ module.exports = function(app){
 	});
 
 	// parkingspot
-	app.put('/api/parkingspot/:id/endparking', function(req, res){
-		hyperledgerService.get('EndParking', req.params.id, res);
-	});
 	app.get('/api/parkingspot/:id', function(req, res){
-		hyperledgerService.get('getParkingTime', req.params.id, res);
+		hyperledgerService.get('getParkingTime', [req.params.id], res);
 	});
+	app.post('/api/parkingspot/:id/open', function(req, res){
+		hyperledgerService.put('saveParkingtimeOpenTime', req.params.id, req.body, res);
+	});
+	app.get('/api/parkingspot/owner/:ownerId', function(req, res){
+		var searchQuery = {
+			"name": ".*",
+			"ownerId": req.params.ownerId
+		};
+		hyperledgerService.get('FindParkingspot', [searchQuery], res);
+	});
+	app.get('/api/parkingspot/:id/parkingtimes', function(req, res){
+		hyperledgerService.get('getParkingtimesForParkingspot', [req.params.id], res);
+	});
+	app.put('/api/parkingspot/:id/endparking', function(req, res){
+		hyperledgerService.get('EndParking', [req.params.id], res);
+	});
+
 	app.get('/api/parkingspot/search/reservation/x/:x/y/:y/startTime/:startTime/endTime/:endTime/', function(req, res){
 		// "x": req.params.x,
 		// "y": req.params.y,
@@ -54,4 +68,11 @@ module.exports = function(app){
 		// hyperledgerService.get('FindParkingspot', searchParameter, res);
 	});
 	
+
+	app.post('/api/parkingtime/:id', function(req, res){
+		hyperledgerService.put('saveParkingtime', req.params.id, req.body, res);
+	});
+	app.post('/api/parkingtime/:id/reserve', function(req, res){
+		hyperledgerService.put('saveReservation', req.params.id, req.body, res);
+	});
 }
