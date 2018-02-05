@@ -104,6 +104,8 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.findByQuery(APIstub, args)
 	
 	//parkingspots
+	} else if function == "GetParkingspot" {
+		return s.GetParkingspot(APIstub, args)
 	} else if function == "FindParkingspot" {
 		return s.FindParkingspot(APIstub, args)
 	} else if function == "SaveParkingspot" {
@@ -686,6 +688,23 @@ func (s *SmartContract) FindParkingspot(APIstub shim.ChaincodeStubInterface, arg
 	result, err := s.marshalQueryResult(resultsIterator)
 	return shim.Success([]byte(result))
 }
+
+func (s *SmartContract) GetParkingspot(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1, FindParkingspot parameter")
+	}
+
+	id := args[0]
+	compositeKey, _ := APIstub.CreateCompositeKey("Parkingspot", []string{id})
+
+	resultAsBytes, err := APIstub.GetState(compositeKey)
+	if err != nil {
+		return shim.Error(fmt.Sprintf("Failed to get Parkingspot(%s): %s", id, err))
+	}
+
+	return shim.Success(resultAsBytes)
+}
+
 
 func (s *SmartContract) SaveParkingspot(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 	if len(args) != 2 {

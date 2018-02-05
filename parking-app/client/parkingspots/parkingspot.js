@@ -28,8 +28,7 @@ app.controller('parkingspotCtrl', function($scope, parkingspotService, userServi
 		"id":"201",
 		"parkingEnd": new Date().toISOString(),
 		"parkingStart": new Date().toISOString(),
-		"costPerMinute": 10,
-		
+		"costPerMinute": 10
 	};
 
 	$scope.search = function(){
