@@ -55,7 +55,7 @@
 							<th>Parkingspot</th>
 						</tr>
 						<tr ng-repeat="parkingtime in parkingspotQueryResults" ng-click="showParkingspot(parkingtime)">
-							<td>{{parkingtime.Id}}</td>
+							<td>{{parkingtime.id}}</td>
 							<td>{{parkingtime.parkingType}}</td>
 							<td>{{parkingtime.parkingStart | date:'dd.MM.yyyy HH:mm:ss Z' }}</td>
 							<td>{{parkingtime.parkingEnd | date:'dd.MM.yyyy HH:mm:ss Z' }}</td>
@@ -65,7 +65,7 @@
 						</tr>
 					</table>
 				</div>
-				<div class="form-group">
+				<div class="form-group" style="width: 400px; margin-left: 10px;">
 					<label>Update user: {{lastTransactionId}}</label>
 					<br/>
 					id: <input class="form-control" type="text" placeholder="Ex: 11" ng-model="newParkingtime.id">
