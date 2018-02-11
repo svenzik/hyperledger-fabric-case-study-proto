@@ -385,10 +385,12 @@ func (s *SmartContract) saveParkingtimeOpenTime(APIstub shim.ChaincodeStubInterf
 	}
 
 	parkingTime.ParkingType = "FREE"
-	result, err := s.put(APIstub, args[0], parkingTime)
+	parkingTimeResult, err := s.ParkingTimeService.Save(APIstub, parkingTime)
 	if err != nil {
-		return shim.Error(fmt.Sprintf("Failed to persist reservation: %s", err))
+		return shim.Error(fmt.Sprintf("Failed to persist parkingTime: %s", err))
 	}
+	
+	result, _ := json.Marshal(parkingTimeResult)
 	return shim.Success(result)
 }
 
@@ -401,14 +403,23 @@ func (s *SmartContract) saveReservation(APIstub shim.ChaincodeStubInterface, arg
 	resultsIterator, _ := s.findParkingspotOverlaping(APIstub, parkingTime.ParkingStart.String(), parkingTime.ParkingEnd.String())
 	if resultsIterator.HasNext() {
 		queryResponse, _ := resultsIterator.Next()
-		return shim.Error(fmt.Sprintf("Time is overlaping with : %s", queryResponse))
+		parkingtime := ParkingTime{}
+		err := json.Unmarshal(queryResponse.Value, &parkingtime)
+		if err != nil {
+			fmt.Printf("Error unmarshal: %s -> %s", err, queryResponse.Value)
+		}
+		if parkingtime.ParkingType != "FREE" {
+			return shim.Error(fmt.Sprintf("Time is overlaping with : %s", parkingtime))
+		}
 	}
 
 	parkingTime.ParkingType = "RESERVATION"
-	result, err := s.put(APIstub, args[0], parkingTime)
+	parkingTimeResult, err := s.ParkingTimeService.Save(APIstub, parkingTime)
 	if err != nil {
-		return shim.Error(fmt.Sprintf("Failed to persist reservation: %s", err))
+		return shim.Error(fmt.Sprintf("Failed to persist parkingTime: %s", err))
 	}
+	
+	result, _ := json.Marshal(parkingTimeResult)
 	return shim.Success(result)
 }
 
@@ -421,16 +432,24 @@ func (s *SmartContract) saveParkingtime(APIstub shim.ChaincodeStubInterface, arg
 	resultsIterator, _ := s.findParkingspotOverlaping(APIstub, parkingTime.ParkingStart.String(), parkingTime.ParkingEnd.String())
 	if resultsIterator.HasNext() {
 		queryResponse, _ := resultsIterator.Next()
-		return shim.Error(fmt.Sprintf("Time is overlaping with : %s", queryResponse))
+
+		parkingtime := ParkingTime{}
+		err := json.Unmarshal(queryResponse.Value, &parkingtime)
+		if err != nil {
+			fmt.Printf("Error unmarshal: %s -> %s", err, queryResponse.Value)
+		}
+		if parkingtime.ParkingType != "FREE" {
+			return shim.Error(fmt.Sprintf("Time is overlaping with : %s", parkingtime))
+		}
 	}
 
 	parkingTime.ParkingType = "PARKING"
-	result, err := s.put(APIstub, args[0], parkingTime)
+	parkingTimeResult, err := s.ParkingTimeService.Save(APIstub, parkingTime)
 	if err != nil {
 		return shim.Error(fmt.Sprintf("Failed to persist parkingTime: %s", err))
 	}
-	s.ParkingTimeService.Save(APIstub, parkingTime)
-
+	
+	result, _ := json.Marshal(parkingTimeResult)
 	return shim.Success(result)
 }
 
