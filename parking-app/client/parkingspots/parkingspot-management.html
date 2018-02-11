@@ -1,55 +1,60 @@
     <div id="body">
-      <table class="table" align="center">
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Cost per min</th>
-          <th>Owner</th>
-        </tr>
-        <tr ng-repeat="ps in allParkingspots" ng-click="showParkingspotSchedule(ps.id)">
-          <td>{{ps.id}}</td>
-          <td>{{ps.name}}</td>
-          <td>{{ps.costPerMinute.amount}} {{ps.costPerMinute.currencyName}}</td>
-		  <td>{{ps.owner.name}}</td>
-        </tr>
-      </table>
-      <div class="form-group">
-        <p><input type="submit" value="Get all parkingspots" class="btn btn-primary" ng-click="search()"></p>
-      </div>
+      <div style="display: flex; flex-wrap: wrap;">
+        <div>
+          <table class="table" align="center">
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Cost per min</th>
+              <th>Owner</th>
+            </tr>
+            <tr ng-repeat="ps in allParkingspots" ng-click="showParkingspotSchedule(ps.id)">
+              <td>{{ps.id}}</td>
+              <td>{{ps.name}}</td>
+              <td>{{ps.costPerMinute.amount}} {{ps.costPerMinute.currencyName}}</td>
+              <td>{{ps.owner.name}}</td>
+            </tr>
+          </table>
+          
+          <div class="form-group">
+            <p><input type="submit" value="Get all parkingspots" class="btn btn-primary" ng-click="search()"></p>
+          </div>
 
-	  <table class="table" align="center">
-		  <tr>
-            <th>ID</th>
-            <th>Type</th>
-            <th>Start</th>
-            <th>End</th>
-            <th>Cost per minute</th>
-            <th>Cost for time</th>
-            <th>Parkingspot</th>
-            <th>Parkingspot.id</th>
-          </tr>
-        <tr ng-repeat="result in parkingSpotParkingTimes" ng-click="editSchedule(result)">
-            <td>{{result.id}}</td>
-            <td>{{result.parkingType}}</td>
-            <td>{{result.parkingStart | date:'dd.MM.yyyy HH:mm:ss Z' }}</td>
-            <td>{{result.parkingEnd | date:'dd.MM.yyyy HH:mm:ss Z' }}</td>
-            <td>{{result.costPerMinute}}</td>
-            <td>{{result.cost}}</td>
-            <td>{{result.parkingspot.name}}</td>
-            <td>{{result.parkingspot.id}}</td>
-        </tr>
-      </table>
-
-      <div class="form-group">
-        <label>Update user: {{lastTransactionId}}</label><br/>
-		<br>
-        id: <input class="form-control" type="text" placeholder="Ex: 11" ng-model="newParkingtime.id">
-        ParkingStart: <input class="form-control" type="text" placeholder="Ex: 2017-12-11T14:09:38.7378781Z" ng-model="newParkingtime.parkingStart">
-        ParkingEnd: <input id="createName" class="form-control" type="text" placeholder="Ex: 2017-12-11T14:09:38.7378781Z" ng-model="newParkingtime.parkingEnd">
-        CostPerMinute: <input id="createName" class="form-control" type="text" placeholder="Ex: 10" ng-model="newParkingtime.costPerMinute">
-        Parkingspot.id: <input class="form-control" type="text" placeholder="Ex: 2" ng-model="newParkingtime.parkingspot.id">
-		<input type="submit" value="Create new parking free time" class="btn btn-primary" ng-click="saveParkingspotOpenHours(newParkingtime)">
-        <input type="submit" value="Create new parking slot" class="btn btn-primary" ng-click="saveParkingtime(newParkingtime)">
-        <input type="submit" value="Create new parking reservation" class="btn btn-primary" ng-click="saveParkingtimeReservation(newParkingtime)">
+          <table class="table" align="center">
+            <tr>
+                  <th>ID</th>
+                  <th>Type</th>
+                  <th>Start</th>
+                  <th>End</th>
+                  <th>EUR/min</th>
+                  <th>Cost</th>
+                  <th>Parkingspot</th>
+                  <th>Parkingspot.id</th>
+                </tr>
+              <tr ng-repeat="result in parkingSpotParkingTimes" ng-click="editSchedule(result)">
+                  <td>{{result.id}}</td>
+                  <td>{{result.parkingType}}</td>
+                  <td>{{result.parkingStart | date:'dd.MM.yyyy HH:mm:ss Z' }}</td>
+                  <td>{{result.parkingEnd | date:'dd.MM.yyyy HH:mm:ss Z' }}</td>
+                  <td>{{result.costPerMinute}}</td>
+                  <td>{{result.cost}}</td>
+                  <td>{{result.parkingspot.name}}</td>
+                  <td>{{result.parkingspot.id}}</td>
+              </tr>
+            </table>
+          </div>
+          
+          <div class="form-group" style="margin-left: 10px; width: 400px;">
+            <label>Update parkingtime: {{lastTransactionId}}</label><br/>
+            <br/>
+            id: <input class="form-control" type="text" placeholder="Ex: 11" ng-model="newParkingtime.id">
+            ParkingStart: <input class="form-control" type="text" placeholder="Ex: 2017-12-11T14:09:38.7378781Z" ng-model="newParkingtime.parkingStart">
+            ParkingEnd: <input id="createName" class="form-control" type="text" placeholder="Ex: 2017-12-11T14:09:38.7378781Z" ng-model="newParkingtime.parkingEnd">
+            CostPerMinute: <input id="createName" class="form-control" type="text" placeholder="Ex: 10" ng-model="newParkingtime.costPerMinute">
+            Parkingspot.id: <input class="form-control" type="text" placeholder="Ex: 2" ng-model="newParkingtime.parkingspot.id">
+            <input type="submit" value="new open time" class="btn btn-primary" ng-click="saveParkingspotOpenHours(newParkingtime)">
+            <input type="submit" value="new parking" class="btn btn-primary" ng-click="saveParkingtime(newParkingtime)">
+            <input type="submit" value="new reservation" class="btn btn-primary" ng-click="saveParkingtimeReservation(newParkingtime)">
+          </div>
       </div>
     </div>

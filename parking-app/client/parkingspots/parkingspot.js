@@ -40,6 +40,8 @@ app.controller('parkingspotCtrl', function($scope, $routeParams, parkingspotServ
 		}).catch(err => {
 			$scope.$emit('errorMessage', "Internal error: " + err.message);
 		});
+		$scope.parkingSpotParkingTimes = [];		
+		$scope.newParkingtime = {};
 	}
 
 	$scope.showParkingspotSchedule = function(parkingspotId){
