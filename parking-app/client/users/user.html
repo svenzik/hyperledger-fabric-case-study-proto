@@ -1,24 +1,34 @@
-    <div id="body">
-      <table id="all_users" class="table" align="center">
-        <tr>
-          <th>Key</th>
-          <th>ID</th>
-          <th>Name</th>
-        </tr>
-        <tr ng-repeat="user in allUsers" ng-click="showUser(user.id)">
-          <td>{{user.Key}}</td>
-          <td>{{user.id}}</td>
-          <td>{{user.name}}</td>
-        </tr>
-      </table>
-      <div class="form-group">
-        <p><input type="submit" value="Get all users" class="btn btn-primary" ng-click="getAllUsers()"></p>
+  <div id="body">
+    <div style="display: flex; flex-wrap: wrap;">
+      <div>
+        <table id="all_users" class="table" align="center">
+          <tr>
+            <th>Key</th>
+            <th>ID</th>
+            <th>Name</th>
+            <th></th>
+          </tr>
+          <tr ng-repeat="user in allUsers" ng-click="showUser(user.id)">
+            <td>{{user.Key}}</td>
+            <td>{{user.id}}</td>
+            <td>{{user.name}}</td>
+            <td><input type="button" value="User parkingspots" class="btn btn-primary" ng-click="userParkingspots(user)"></td>
+          </tr>
+        </table>
+        <div class="form-group">
+          <p>
+            <input type="submit" value="Get all users" class="btn btn-primary" ng-click="getAllUsers()">
+          </p>
+        </div>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" style="margin-left: 10px;">
+        <input type="submit" value="Save" class="btn btn-primary" ng-click="saveUser(selectedUser)">
+        <br/>
         <label>Update user: {{lastTransactionId}}</label><br/>
         Id: <input class="form-control" type="text" placeholder="Ex: 11" ng-model="selectedUser.id">
         Name: <input class="form-control" type="text" ng-model="selectedUser.name">
-        <input type="submit" value="Save" class="btn btn-primary" ng-click="saveUser(selectedUser)">
       </div>
+
     </div>
+  </div>

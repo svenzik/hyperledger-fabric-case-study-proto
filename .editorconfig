@@ -15,6 +15,10 @@ end_of_line = lf
 [*.js]
 indent_size = 2
 
+[*.htm*]
+indent_style = space
+indent_size = 2
+
 # Matches multiple files with brace expansion notation
 # Set default charset
 # [*.{js,py}]
