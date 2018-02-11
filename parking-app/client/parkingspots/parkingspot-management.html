@@ -8,7 +8,7 @@
               <th>Cost per min</th>
               <th>Owner</th>
             </tr>
-            <tr ng-repeat="ps in allParkingspots" ng-click="showParkingspotSchedule(ps.id)">
+            <tr ng-repeat="ps in allParkingspots" ng-click="showParkingspotSchedule(ps)">
               <td>{{ps.id}}</td>
               <td>{{ps.name}}</td>
               <td>{{ps.costPerMinute.amount}} {{ps.costPerMinute.currencyName}}</td>
@@ -26,7 +26,7 @@
                   <th>Type</th>
                   <th>Start</th>
                   <th>End</th>
-                  <th>EUR/min</th>
+                  <th>EUR C/min</th>
                   <th>Cost</th>
                   <th>Parkingspot</th>
                   <th>Parkingspot.id</th>

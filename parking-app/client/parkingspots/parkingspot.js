@@ -44,15 +44,22 @@ app.controller('parkingspotCtrl', function($scope, $routeParams, parkingspotServ
 		$scope.newParkingtime = {};
 	}
 
-	$scope.showParkingspotSchedule = function(parkingspotId){
-		parkingspotService.getParkingtimes(parkingspotId)
+	$scope.showParkingspotSchedule = function(parkingspot){
+		parkingspotService.getParkingtimes(parkingspot.id)
 		.then(parkingtimesList => {
 			parkingtimesList.sort(function(a, b) {
-					return a - b;
+				return new Date(b.parkingStart) -  new Date(a.parkingStart);
 			});
 			$scope.parkingSpotParkingTimes = parkingtimesList;
 		}).catch(err => {
 			$scope.$emit('errorMessage', "Internal error: " + err.message);
+		});
+		$scope.editSchedule({
+			"id":"xxx",
+			"parkingStart": new Date().toISOString(),
+			"parkingEnd": new Date().toISOString(),
+			"costPerMinute": parkingspot.costPerMinute.amount,
+			"parkingspot": parkingspot
 		});
 	}
 	
@@ -65,7 +72,7 @@ app.controller('parkingspotCtrl', function($scope, $routeParams, parkingspotServ
 	$scope.saveParkingtime = function(parkingtime){
 		parkingspotService.saveParkingtime(parkingtime)
 		.then(parkingtimeResult => {
-			$scope.showParkingspotSchedule(parkingtime.parkingspot.id);
+			$scope.showParkingspotSchedule(parkingtime.parkingspot);
 			$scope.editSchedule({});
 			$scope.lastTransactionId = parkingtimeResult;
 		}).catch(err => {
@@ -76,7 +83,7 @@ app.controller('parkingspotCtrl', function($scope, $routeParams, parkingspotServ
 	$scope.saveParkingtimeReservation = function(parkingtime){
 		parkingspotService.saveParkingtimeReservation(parkingtime)
 		.then(parkingtimeResult => {
-			$scope.showParkingspotSchedule(parkingtime.parkingspot.id);
+			$scope.showParkingspotSchedule(parkingtime.parkingspot);
 			$scope.editSchedule({});
 			$scope.lastTransactionId = parkingtimeResult;
 		}).catch(err => {
@@ -87,7 +94,7 @@ app.controller('parkingspotCtrl', function($scope, $routeParams, parkingspotServ
 	$scope.saveParkingspotOpenHours = function(parkingtime){
 		parkingspotService.saveParkingspotOpenHours(parkingtime)
 		.then(parkingtimeResult => {
-			$scope.showParkingspotSchedule(parkingtime.parkingspot.id);
+			$scope.showParkingspotSchedule(parkingtime.parkingspot);
 			$scope.editSchedule({});
 			$scope.lastTransactionId = parkingtimeResult;
 		}).catch(err => {

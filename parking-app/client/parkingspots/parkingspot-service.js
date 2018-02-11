@@ -69,7 +69,8 @@ app.factory('parkingspotService', function(apiService){
 	}
 
 	factory.saveParkingspotOpenHours = function(parkingtime) {
-		return apiService.post(`/parkingspot/${parkingtime.parkingspot.id}/open`, parkingtime)
+		// return apiService.post(`/parkingspot/${parkingtime.parkingspot.id}/open`, parkingtime)
+		return apiService.post(`/parkingspot/${parkingtime.id}/open`, parkingtime)
 		.then(result => {
 			return result.data;
 		}).catch(err => {
