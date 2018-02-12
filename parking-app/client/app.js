@@ -87,7 +87,7 @@ app.config(function($routeProvider) {
 								controller : "parkingspotCtrl"
 						})
 			.when("/search", {
-								templateUrl : "parkingspots/parkingspot-reservation.html",
+								templateUrl : "parkingtime/parkingspot-reservation.html",
 								controller : "parkingtimeCtrl"
 						})
 			.when("/parkingtimes/all", {
