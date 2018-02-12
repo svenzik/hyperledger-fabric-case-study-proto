@@ -862,7 +862,8 @@ func (s *SmartContract) findParkingspotOverlaping(APIstub shim.ChaincodeStubInte
 
 func (s *SmartContract) findParkingspotOverlapingIsoString(APIstub shim.ChaincodeStubInterface, ParkingStart string, ParkingEnd string) (shim.StateQueryIteratorInterface, error) {
 	//queryString := fmt.Sprintf("{\"selector\": {\"parkingStart\": {\"$lte\": \"%s\"}, \"parkingEnd\": {\"$gte\": \"%s\"}}}", ParkingStart, ParkingEnd)
-	queryString := fmt.Sprintf("{\"selector\": {\"$or\": [{\"parkingStart\": {\"$lte\": \"%s\"},\"parkingEnd\": {\"$gte\": \"%s\"},\"parkingType\": {\"$eq\": \"FREE\"}}, {\"parkingStart\": {\"$gte\": \"%s\"},\"parkingEnd\": {\"$lte\": \"%s\"},\"parkingType\": {\"$ne\": \"FREE\"}}]}}", ParkingStart, ParkingEnd, ParkingStart, ParkingEnd)
+	// queryString := fmt.Sprintf("{\"selector\": {\"$or\": [{\"parkingStart\": {\"$lte\": \"%s\"},\"parkingEnd\": {\"$gte\": \"%s\"},\"parkingType\": {\"$eq\": \"FREE\"}}, {\"parkingStart\": {\"$gte\": \"%s\"},\"parkingEnd\": {\"$lte\": \"%s\"},\"parkingType\": {\"$ne\": \"FREE\"}}]}}", ParkingStart, ParkingEnd, ParkingStart, ParkingEnd)
+	queryString := "{\"selector\": {\"$or\": [{\"parkingStart\": {\"$lte\": " + ParkingStart + "},\"parkingEnd\": {\"$gte\": " + ParkingEnd + "},\"parkingType\": {\"$eq\": \"FREE\"}}, {\"$and\": [{\"$or\": [{\"parkingStart\": {\"$lt\": " + ParkingStart + "}}, {\"parkingStart\": {\"$lt\": " + ParkingEnd + "}}]}, {\"$or\": [{\"parkingEnd\": {\"$gt\": " + ParkingStart + ",}}, {\"parkingEnd\": {\"$gt\": " + ParkingEnd + "}}]}],\"parkingType\": {\"$ne\": \"FREE\"}}]}}"
 	resultsIterator, err := APIstub.GetQueryResult(queryString)
 	if err != nil {
 		return resultsIterator, err
