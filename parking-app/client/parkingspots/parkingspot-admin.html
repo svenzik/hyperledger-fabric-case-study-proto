@@ -7,12 +7,16 @@
               <th>Name</th>
               <th>Cost per min</th>
               <th>Owner</th>
+              <th></th>
             </tr>
             <tr ng-repeat="ps in allParkingspots" ng-click="editParkingspot(ps)">
               <td>{{ps.id}}</td>
               <td>{{ps.name}}</td>
               <td>{{ps.costPerMinute.amount}} {{ps.costPerMinute.currencyName}}</td>
               <td>{{ps.owner.name}}</td>
+              <td>
+                <input type="button" value="Admin parkingtimes" class="btn btn-primary" ng-click="parkingspotParkingtimes(ps)">
+              </td>
             </tr>
           </table>
           
