@@ -44,7 +44,7 @@ app.controller('userCtrl', function($scope, $location, userService){
 		try {
 			userService.saveUser(user, function(transactionId, data){
 				$scope.lastTransactionId = transactionId;
-				$scope.allUsers.push(data);
+				$scope.getAllUsers();
 			});
 		} catch(err) { 
 			$scope.lastTransactionId = err.toString();
