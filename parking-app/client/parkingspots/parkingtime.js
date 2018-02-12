@@ -24,6 +24,7 @@ app.controller('parkingtimeCtrl', function($scope, parkingspotService){
 		var result = parkingspotService.searchParkingspot(parkingspotQuery);
 		result.then(parkingspotResult => {
 			console.log(parkingspotResult);
+			$scope.parkingspotQueryResults.splice(0, $scope.parkingspotQueryResults.length)
 			$scope.parkingspotQueryResults = parkingspotResult;
 		}).catch(err => {
 			$scope.$emit('errorMessage', "Internal error: " + err.getMessage());

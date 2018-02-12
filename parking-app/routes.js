@@ -56,14 +56,69 @@ module.exports = function(app){
 	});
 
 	app.get('/api/parkingspot/search/reservation/x/:x/y/:y/startTime/:startTime/endTime/:endTime/', function(req, res){
+		var startTime = new Date(Date.parse(new Date(Date.parse(req.params.startTime)).toUTCString())).toISOString().replace(".000Z", "Z");
+		var endTime = new Date(Date.parse(new Date(Date.parse(req.params.endTime)).toUTCString())).toISOString().replace(".000Z", "Z");
 		// "x": req.params.x,
 		// "y": req.params.y,
+		// var searchParameter = {
+		// 	"parkingStart": req.params.startTime,
+		// 	"parkingEnd": req.params.endTime
+		// };
+
 		var searchParameter = {
-			"parkingStart": req.params.startTime,
-			"parkingEnd": req.params.endTime
+			"selector": {
+				"$or": [
+					{
+						"parkingStart": {
+							"$lte": startTime
+						},
+						"parkingEnd": {
+							"$gte": endTime
+						},
+						"parkingType": {
+							"$eq": "FREE"
+						}
+					},
+					{
+						"$and": [
+							{
+								"$or": [
+									{
+										"parkingStart": {
+											"$lt": startTime
+										}
+									}
+									, {
+										"parkingStart": {
+											"$lt": endTime
+										}
+									}
+								]
+							}, {
+								"$or": [
+									{
+										"parkingEnd": {
+											"$gt": startTime, 
+										}
+									},
+									{
+										"parkingEnd": {
+											"$gt": endTime
+										}
+									}
+								]
+							}
+						],
+						"parkingType": {
+							"$ne": "FREE"
+						}
+					}
+				]
+			}
 		};
-		// hyperledgerService.get('findByQuery', searchParameter , res);
-		hyperledgerService.get('findBetweenTime', [searchParameter.parkingStart, searchParameter.parkingEnd] , res);
+		hyperledgerService.get('findByQuery', [searchParameter] , res);
+		
+		// hyperledgerService.get('findBetweenTime', [startTime, endTime] , res);
 		// hyperledgerService.get('FindParkingspot', searchParameter, res);
 		// hyperledgerService.get('FindParkingspot', searchParameter, res);
 	});

@@ -50,8 +50,8 @@
 							<th>Type</th>
 							<th>Start</th>
 							<th>End</th>
-							<th>Cost per minute</th>
-							<th>Cost for time</th>
+							<th>EUR C/min</th>
+							<th>Cost</th>
 							<th>Parkingspot</th>
 						</tr>
 						<tr ng-repeat="parkingtime in parkingspotQueryResults" ng-click="showParkingspot(parkingtime)">
@@ -61,12 +61,12 @@
 							<td>{{parkingtime.parkingEnd | date:'dd.MM.yyyy HH:mm:ss Z' }}</td>
 							<td>{{parkingtime.costPerMinute}}</td>
 							<td>{{parkingtime.cost}}</td>
-							<td>{{parkingtime.parkingspot.name}} - {{parkingtime.parkingspot.id}}</td>
+							<td>{{parkingtime.parkingspot.name}} ({{parkingtime.parkingspot.owner.name}})</td>
 						</tr>
 					</table>
 				</div>
 				<div class="form-group" style="width: 400px; margin-left: 10px;">
-					<label>Update user: {{lastTransactionId}}</label>
+					<label>Update parkingtime: {{lastTransactionId}}</label>
 					<br/>
 					id: <input class="form-control" type="text" placeholder="Ex: 11" ng-model="newParkingtime.id">
 					ParkingStart: <input class="form-control" type="text" placeholder="Ex: 2017-12-11T14:09:38.7378781Z" ng-model="newParkingtime.parkingStart">
