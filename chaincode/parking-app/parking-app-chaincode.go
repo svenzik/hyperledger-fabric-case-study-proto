@@ -240,7 +240,7 @@ func (s *SmartContract) findBetweenTime(APIstub shim.ChaincodeStubInterface, arg
 		return shim.Error("Incorrect number of arguments. Expecting 2")
 	}
 
-	resultsIterator, err := s.findParkingspotOverlaping(APIstub, args[0], args[1])
+	resultsIterator, err := s.findParkingspotOverlapingIsoString(APIstub, args[0], args[1])
 	if err != nil {
 		return shim.Error(err.Error())
 	}
@@ -400,16 +400,16 @@ func (s *SmartContract) saveReservation(APIstub shim.ChaincodeStubInterface, arg
 		return shim.Error(fmt.Sprintf("Failed to unmarshal parkingTime: %s", args[1]))
 	}
 
-	resultsIterator, _ := s.findParkingspotOverlaping(APIstub, parkingTime.ParkingStart.String(), parkingTime.ParkingEnd.String())
+	resultsIterator, _ := s.findParkingspotOverlaping(APIstub, parkingTime.ParkingStart, parkingTime.ParkingEnd)
 	if resultsIterator.HasNext() {
 		queryResponse, _ := resultsIterator.Next()
-		parkingtime := ParkingTime{}
-		err := json.Unmarshal(queryResponse.Value, &parkingtime)
+		existingParkingTime := ParkingTime{}
+		err := json.Unmarshal(queryResponse.Value, &existingParkingTime)
 		if err != nil {
 			fmt.Printf("Error unmarshal: %s -> %s", err, queryResponse.Value)
 		}
-		if parkingtime.ParkingType != "FREE" {
-			return shim.Error(fmt.Sprintf("Time is overlaping with : %s", parkingtime))
+		if existingParkingTime.ParkingType != "FREE" && existingParkingTime.Parkingspot.Id == parkingTime.Parkingspot.Id {
+			return shim.Error(fmt.Sprintf("Time is overlaping with : %s", existingParkingTime))
 		}
 	}
 
@@ -429,17 +429,16 @@ func (s *SmartContract) saveParkingtime(APIstub shim.ChaincodeStubInterface, arg
 		return shim.Error(fmt.Sprintf("Failed to unmarshal parkingTime: %s", args[1]))
 	}
 
-	resultsIterator, _ := s.findParkingspotOverlaping(APIstub, parkingTime.ParkingStart.String(), parkingTime.ParkingEnd.String())
+	resultsIterator, _ := s.findParkingspotOverlaping(APIstub, parkingTime.ParkingStart, parkingTime.ParkingEnd)
 	if resultsIterator.HasNext() {
 		queryResponse, _ := resultsIterator.Next()
-
-		parkingtime := ParkingTime{}
-		err := json.Unmarshal(queryResponse.Value, &parkingtime)
+		existingParkingTime := ParkingTime{}
+		err := json.Unmarshal(queryResponse.Value, &existingParkingTime)
 		if err != nil {
 			fmt.Printf("Error unmarshal: %s -> %s", err, queryResponse.Value)
 		}
-		if parkingtime.ParkingType != "FREE" {
-			return shim.Error(fmt.Sprintf("Time is overlaping with : %s", parkingtime))
+		if existingParkingTime.ParkingType != "FREE" && existingParkingTime.Parkingspot.Id == parkingTime.Parkingspot.Id {
+			return shim.Error(fmt.Sprintf("Time is overlaping with : %s", existingParkingTime))
 		}
 	}
 
@@ -855,9 +854,15 @@ func (s *SmartContract) put(APIstub shim.ChaincodeStubInterface, id string, park
 	return resultAsBytes, err
 }
 
-// func (s *SmartContract) findParkingspotOverlaping(APIstub shim.ChaincodeStubInterface, ParkingStart time.Time, ParkingEnd time.Time) (shim.StateQueryIteratorInterface, error) {
-func (s *SmartContract) findParkingspotOverlaping(APIstub shim.ChaincodeStubInterface, ParkingStart string, ParkingEnd string) (shim.StateQueryIteratorInterface, error) {
-	queryString := fmt.Sprintf("{\"selector\": {\"parkingStart\": {\"$lte\": \"%s\"}, \"parkingEnd\": {\"$gte\": \"%s\"}}}", ParkingStart, ParkingEnd)
+func (s *SmartContract) findParkingspotOverlaping(APIstub shim.ChaincodeStubInterface, ParkingStart time.Time, ParkingEnd time.Time) (shim.StateQueryIteratorInterface, error) {
+	ParkingStartIso,_ := ParkingStart.MarshalText()
+	ParkingEndIso,_ := ParkingEnd.MarshalText()
+	return s.findParkingspotOverlapingIsoString(APIstub, string(ParkingStartIso), string(ParkingEndIso));
+}
+
+func (s *SmartContract) findParkingspotOverlapingIsoString(APIstub shim.ChaincodeStubInterface, ParkingStart string, ParkingEnd string) (shim.StateQueryIteratorInterface, error) {
+	//queryString := fmt.Sprintf("{\"selector\": {\"parkingStart\": {\"$lte\": \"%s\"}, \"parkingEnd\": {\"$gte\": \"%s\"}}}", ParkingStart, ParkingEnd)
+	queryString := fmt.Sprintf("{\"selector\": {\"$or\": [{\"parkingStart\": {\"$lte\": \"%s\"},\"parkingEnd\": {\"$gte\": \"%s\"},\"parkingType\": {\"$eq\": \"FREE\"}}, {\"parkingStart\": {\"$gte\": \"%s\"},\"parkingEnd\": {\"$lte\": \"%s\"},\"parkingType\": {\"$ne\": \"FREE\"}}]}}", ParkingStart, ParkingEnd, ParkingStart, ParkingEnd)
 	resultsIterator, err := APIstub.GetQueryResult(queryString)
 	if err != nil {
 		return resultsIterator, err
