@@ -57,7 +57,7 @@ app.controller('parkingspotAdminCtrl', function($scope, $routeParams, $location,
 	}
 
 	$scope.parkingspotParkingtimes = function(parkingspot){
-		$location.path('/parkingtimes/user/' + parkingspot.id);
+		$location.path('/parkingtimes/user/' + parkingspot.owner.id);
 	}
 	
 	// $scope.search();
