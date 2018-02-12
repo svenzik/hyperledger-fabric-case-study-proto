@@ -2,11 +2,16 @@
 
 'use strict';
 
-var app = angular.module('application', ['ngRoute', 'ui.bootstrap.datetimepicker']);
+var app = angular.module('application', [
+		'ngRoute', 
+		'ui.bootstrap.datetimepicker'
+	]
+);
+
 var API_PATH = '/api';
 
 // Angular Controller
-app.controller('appCtrl', function($scope, appFactory){
+app.controller('AppController', function($scope, appFactory){
 	$scope.hasErrors = false;
 	$scope.errors = [];
 	$scope.closeAlert = function (index) {
