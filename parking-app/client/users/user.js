@@ -55,5 +55,9 @@ app.controller('userCtrl', function($scope, $location, userService){
 		$location.path('/parkingspots/user/' + user.id);
 	}
 	
+	$scope.userParkingtimes = function(user){
+		$location.path('/parkingtimes/user/' + user.id);
+	}
+
 	$scope.getAllUsers();
 });

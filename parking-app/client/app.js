@@ -83,6 +83,10 @@ app.config(function($routeProvider) {
 						controller : "mainController"
 						})
 			.when("/parkingspots/user/:id", {
+								templateUrl : "parkingspots/parkingspot-admin.html",
+								controller : "parkingspotAdminCtrl"
+						})
+			.when("/parkingtimes/user/:id", {
 								templateUrl : "parkingspots/parkingspot-management.html",
 								controller : "parkingspotCtrl"
 						})

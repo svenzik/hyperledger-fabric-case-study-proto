@@ -31,7 +31,13 @@ app.factory('parkingspotService', function(apiService){
 		});
 	}
 
-	factory.saveParkingspot = function(user, callback){
+	factory.saveParkingspot = function(parkingspot, callback){
+		return apiService.post(`/parkingspot/${parkingspot.id}`, parkingspot)
+		.then(result => {
+			return result.data;
+		}).catch(err => {
+			throw new Error(err.data.error);
+		});
 	}
 	
 	factory.getUserParkingspots = function(ownerId) {

@@ -12,7 +12,10 @@
             <td>{{user.Key}}</td>
             <td>{{user.id}}</td>
             <td>{{user.name}}</td>
-            <td><input type="button" value="User parkingspots" class="btn btn-primary" ng-click="userParkingspots(user)"></td>
+            <td>
+              <input type="button" value="Admin parkingspots" class="btn btn-primary" ng-click="userParkingspots(user)">
+              <input type="button" value="Admin parkingtimes" class="btn btn-primary" ng-click="userParkingtimes(user)">
+            </td>
           </tr>
         </table>
         <div class="form-group">

@@ -38,6 +38,9 @@ module.exports = function(app){
 	app.get('/api/parkingspot/:id', function(req, res){
 		hyperledgerService.get('GetParkingspot', [req.params.id], res);
 	});
+	app.post('/api/parkingspot/:id', function(req, res){
+		hyperledgerService.put('SaveParkingspot', req.params.id, req.body, res);
+	});
 	app.post('/api/parkingspot/:id/open', function(req, res){
 		hyperledgerService.put('saveParkingtimeOpenTime', req.params.id, req.body, res);
 	});
