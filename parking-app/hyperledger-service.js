@@ -39,7 +39,7 @@ return{
 		//
 		var member_user = null;
 		var store_path = path.join(os.homedir(), '.hfc-key-store');
-		console.log('Store path:'+store_path);
+		console.log(' + Store path:'+store_path);
 		var tx_id = null;
 
 		// create the key value store as defined in the fabric-client/config/default.json 'key-value-store' setting
@@ -58,10 +58,10 @@ return{
 				return fabric_client.getUserContext('user1', true);
 		}).then((user_from_store) => {
 				if (user_from_store && user_from_store.isEnrolled()) {
-						console.log('Successfully loaded user1 from persistence');
+						console.log(' + Successfully loaded %s from persistence', user_from_store.getName());
 						member_user = user_from_store;
 				} else {
-						throw new Error('Failed to get user1.... run registerUser.js');
+						throw new Error('Failed to get '+user_from_store+'.... run registerUser.js');
 				}
 
 				var stringParams = params;
@@ -79,7 +79,7 @@ return{
 						
 					});
 				}
-				console.log("Calling chaincode: " + methodName + " " + stringParams);
+				console.log(" + Calling chaincode: " + methodName);
 				console.log(stringParams);
 				const request = {
 						chaincodeId: HYPERLEDGER_APP_NAME,
@@ -91,7 +91,7 @@ return{
 				// send the query proposal to the peer
 				return channel.queryByChaincode(request);
 		}).then((query_responses) => {
-				console.log("Query has completed, checking results");
+				console.log(" + Query has completed, checking results");
 				// query_responses could have more than one  results if there multiple peers were used as targets
 				if (query_responses && query_responses.length == 1) {
 						if (query_responses[0] instanceof Error) {
@@ -100,12 +100,13 @@ return{
 						
 						} else {
 								var resultJsonText = query_responses[0].toString();
-								console.log("Response is ", resultJsonText);
+								console.log(" + Response is:");
+								console.log(resultJsonText);
 								res.json(JSON.parse(resultJsonText));
 								// res.json((query_responses[0].toString()));
 						}
 				} else {
-						console.log("No payloads were returned from query");
+						console.log(" + No payloads were returned from query");
 				}
 		}).catch((err) => {
 				console.error('Failed to query successfully :: ' + err);
@@ -114,7 +115,8 @@ return{
 	},
 	put: function(methodName, id, model, res){
 		var message_body = JSON.stringify(model);
-		console.log("HyperledgerService PUT: %s(%s, %s)", methodName, id, message_body);
+		console.log("HyperledgerService PUT: %s(%s)", methodName, id);
+		console.log(message_body);
 
 		var fabric_client = new Fabric_Client();
 
@@ -127,7 +129,7 @@ return{
 
 		var member_user = null;
 		var store_path = path.join(os.homedir(), '.hfc-key-store');
-		console.log('Store path:'+store_path);
+		console.log(' + Store path:'+store_path);
 		var tx_id = null;
 
 		// create the key value store as defined in the fabric-client/config/default.json 'key-value-store' setting
@@ -146,15 +148,15 @@ return{
 				return fabric_client.getUserContext('user1', true);
 		}).then((user_from_store) => {
 				if (user_from_store && user_from_store.isEnrolled()) {
-						console.log('Successfully loaded user1 from persistence');
+						console.log(' + Successfully loaded %s from persistence', user_from_store.getName());
 						member_user = user_from_store;
 				} else {
-						throw new Error('Failed to get user1.... run registerUser.js');
+						throw new Error('Failed to get '+user_from_store+'.... run registerUser.js');
 				}
 
 				// get a transaction id object based on the current user assigned to fabric client
 				tx_id = fabric_client.newTransactionID();
-				console.log("Assigning transaction_id: ", tx_id._transaction_id);
+				console.log(" + Assigning transaction_id: ", tx_id._transaction_id);
 
 				// recordTuna - requires 5 args, ID, vessel, location, timestamp,holder - ex: args: ['10', 'Hound', '-12.021, 28.012', '1504054225', 'Hansel'],
 				// send proposal to endorser
@@ -177,13 +179,17 @@ return{
 				if (proposalResponses && proposalResponses[0].response &&
 						proposalResponses[0].response.status === 200) {
 								isProposalGood = true;
-								console.log('Transaction proposal was good');
+								console.log(' + Transaction proposal was good');
 						} else {
 								console.error('Transaction proposal was bad');
+								//throw new Error('Transaction proposal was bad: ' + proposalResponses[0].response.message);
+								var resultJsonText = proposalResponses[0].toString();
+								console.error("Response is ", resultJsonText);
+								res.json(JSON.parse(resultJsonText));
 						}
 				if (isProposalGood) {
 						console.log(util.format(
-								'Successfully sent Proposal and received ProposalResponse: Status - %s, message - "%s"',
+								' + Successfully sent Proposal and received ProposalResponse: Status - %s, message - "%s"',
 								proposalResponses[0].response.status, proposalResponses[0].response.message));
 
 						// build up the request for the orderer to have the transaction committed
@@ -228,7 +234,7 @@ return{
 												console.error('The transaction was invalid, code = ' + code);
 												resolve(return_status); // we could use reject(new Error('Problem with the tranaction, event status ::'+code));
 										} else {
-												console.log('The transaction has been committed on peer ' + event_hub._ep._endpoint.addr);
+												console.log(' + The transaction has been committed on peer ' + event_hub._ep._endpoint.addr);
 												resolve(return_status);
 										}
 								}, (err) => {
@@ -244,20 +250,20 @@ return{
 						throw new Error('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
 				}
 		}).then((results) => {
-				console.log('Send transaction promise and event listener promise have completed');
+				console.log(' + Send transaction promise and event listener promise have completed');
 				// check the results in the order the promises were added to the promise all list
 				if (results && results[0] && results[0].status === 'SUCCESS') {
-						console.log('Successfully sent transaction to the orderer.');
+						console.log(' + Successfully sent transaction to the orderer.');
 						res.send(tx_id.getTransactionID());
 				} else {
 						console.error('Failed to order the transaction. Error code: ' + response.status);
 				}
 
 				if(results && results[1] && results[1].event_status === 'VALID') {
-						console.log('Successfully committed the change to the ledger by the peer');
+						console.log(' + Successfully committed the change to the ledger by the peer');
 						res.send(tx_id.getTransactionID());
 				} else {
-						console.log('Transaction failed to be committed to the ledger due to ::'+results[1].event_status);
+						console.error('Transaction failed to be committed to the ledger due to ::'+results[1].event_status);
 				}
 		}).catch((err) => {
 				console.error('Failed to invoke successfully :: ' + err);
@@ -295,10 +301,10 @@ return{
 				return fabric_client.getUserContext('user1', true);
 		}).then((user_from_store) => {
 				if (user_from_store && user_from_store.isEnrolled()) {
-						console.log('Successfully loaded user1 from persistence');
+						console.log(' + Successfully loaded %s from persistence', user_from_store.getName());
 						member_user = user_from_store;
 				} else {
-						throw new Error('Failed to get user1.... run registerUser.js');
+						throw new Error('Failed to get '+user_from_store+'.... run registerUser.js');
 				}
 
 				// queryTuna - requires 1 argument, ex: args: ['4'],
@@ -362,7 +368,7 @@ return{
 				return fabric_client.getUserContext(username, true);
 		}).then((user_from_store) => {
 				if (user_from_store && user_from_store.isEnrolled()) {
-						console.log('Successfully loaded '+username+' from persistence');
+					console.log(' + Successfully loaded %s from persistence', user_from_store.getName());
 						member_user = user_from_store;
 						return member_user;
 				
@@ -372,7 +378,7 @@ return{
 					return fabric_client.getUserContext(adminUser, true)
 					.then((user_from_store) => {
 							if (user_from_store && user_from_store.isEnrolled()) {
-									console.log('Successfully loaded admin from persistence');
+									console.log(' + Successfully loaded %s from persistence', user_from_store.getName());
 									admin_user = user_from_store;
 							} else {
 									throw new Error('Failed to get admin.... run registerAdmin.js');
@@ -440,7 +446,7 @@ return{
 				return fabric_client.getUserContext(username, true);
 		}).then((user_from_store) => {
 				if (user_from_store && user_from_store.isEnrolled()) {
-						console.log('Successfully loaded '+username+' from persistence');
+						console.log(' + Successfully loaded %s from persistence', user_from_store.getName());
 						member_user = user_from_store;
 						return member_user;
 				
