@@ -1,12 +1,37 @@
 		<div id="body">
 			<div style="display: flex; flex-wrap: wrap;">
 				<div>
-					<div class="form-group">
+					<div class="form-group" style="width: 400px">
 						X: <input class="form-control" type="text" ng-model="parkingspotQuery.x">
 						Y: <input class="form-control" type="text" ng-model="parkingspotQuery.y">
 						Start: <input class="form-control" type="text" datetime="dd.MM.yyyy HH:mm:ss" datetime-model="yyyy-MM-ddTHH:mm:ss" ng-model="parkingspotQuery.startTime">
 						End: <input class="form-control" type="text" datetime="dd.MM.yyyy HH:mm:ss" ng-model="parkingspotQuery.endTime">
-						<!-- 
+						
+						Start: <datetimepicker data-ng-model="parkingspotQuery.startTime"></datetimepicker>
+						End: <datetimepicker data-ng-model="parkingspotQuery.endTime"></datetimepicker>
+						<!--
+						<div class="dropdown">
+					    <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" data-target=".dropdown" href="#">
+					        Click here to show calendar
+					    </a>
+					    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+					        <datetimepicker data-ng-model="data.date"
+					                        data-datetimepicker-config="{ dropdownSelector: '.dropdown-toggle' }"></datetimepicker>
+					    </ul>
+						</div>
+						
+						<div class="dropdown">
+    <a class="dropdown-toggle" id="dropdown" role="button" data-toggle="dropdown" data-target=".dropdown" href="#">
+      <div class="input-group">
+        <input type="text" id="date" name="date" class="form-control" data-ng-model="data.date">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+      </div>
+    </a>
+    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+      <datetimepicker   data-ng-model="data.date" 
+                        data-datetimepicker-config="{ dropdownSelector: '#dropdown' }"></datetimepicker>
+    </ul>
+  </div>
 						<div class="dropdown form-group dropdown-start-parent">
 						<label>Start Date</label>
 						<a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target=".dropdown-start-parent"
@@ -40,7 +65,7 @@
 												data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
 							</ul>
 						</div> 
-						-->
+					-->
 						<input type="submit" value="Search" class="btn btn-primary" ng-click="search(parkingspotQuery)">
 					</div>
 
