@@ -8,8 +8,12 @@
 			"start-dev": "PORT=8001 node server.js & browser-sync start --port 18000 --no-open  --proxy 'localhost:8001' --serveStatic './' --files './'"
 		},
 		"dependencies": {
-				"@uirouter/angularjs": "^1.0.13",
 				"angular": "^1.6.9",
+				"angular-route": "^1.6.9",
+				"bootstrap": "^3.3.7",
+				"jquery": "^3.2.0",
+				"popper.js": "^1.12.9",
+				"moment": "^2.10.1",
 				"angular-bootstrap-datetimepicker": "^1.1.4",
 				"angular-datetime-input": "^5.2.1",
 				"body-parser": "^1.18.2",

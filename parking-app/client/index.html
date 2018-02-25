@@ -3,35 +3,39 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Hyperledger Fabric Tuna Application</title>
+		<title>Hyperledger Fabric Application</title>
 		<link rel="icon" href="favicon.png" type="image/gif">
 
-		<!-- require jquery and bootstrap scripts -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		<!-- <script type="text/javascript" src="node_modules/angular/angular.js"></script> -->
-		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
-		<!-- <script type="text/javascript" src="node_modules/angular/angular-route.js"></script> -->
-		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-route.min.js"></script>
+		<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+
+		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script> -->
+		<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script> -->
+		<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+		<!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script> -->
 		<!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.min.js"></script> -->
-		<!-- requiring the angular page -->
+		
+		<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+		
+		<script type="text/javascript" src="node_modules/moment/moment.js"></script>
+		<script src="node_modules/jquery/dist/jquery.min.js"></script>
+		<script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+		<script type="text/javascript" src="node_modules/angular/angular.js"></script>
+		<script type="text/javascript" src="node_modules/angular-route/angular-route.js"></script>
 
 		<!-- Date/time picker -->
 		<link rel="stylesheet" href="node_modules/angular-bootstrap-datetimepicker/src/css/datetimepicker.css"/>
-		<script type="text/javascript" src="node_modules/moment/moment.js"></script>
 		<script type="text/javascript" src="node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.js"></script>
 		<script type="text/javascript" src="node_modules/angular-bootstrap-datetimepicker/src/js/datetimepicker.templates.js"></script>
 
 		<script type="text/javascript" src="app.js"></script>
+		<script type="text/javascript" src="util/moment.js"></script>
 		<script type="text/javascript" src="apiclient/api-service.js"></script>
 		<script type="text/javascript" src="main.js"></script>
 		<script type="text/javascript" src="users/user.js"></script>
 		<script type="text/javascript" src="users/user-service.js"></script>
 		<script type="text/javascript" src="parkingtime/parkingtime.js"></script>
 		<script type="text/javascript" src="parkingspots/parkingspot.js"></script>
-		<script type="text/javascript" src="parkingspots/parkingspot-admin
-    .js"></script>
+		<script type="text/javascript" src="parkingspots/parkingspot-admin.js"></script>
 		<script type="text/javascript" src="parkingspots/parkingspot-service.js"></script>
 
 		<!-- adding style here -->
@@ -84,12 +88,12 @@
 						</div>
 
 						<ul class="nav navbar-nav navbar-left">
-								<li><a href="#user"><i class="fa fa-home"></i>Admin users</a></li>
-								<li><a href="#parkingspots/user/1"><i class="fa fa-comment"></i>Admin parkingspots</a></li>
-								<li><a href="#search"><i class="fa fa-comment"></i>Search parkingspot</a></li>
-								<li><a href="#/parkingtimes/all"><i class="fa fa-comment"></i>Schedule.all</a></li>
-								<li><a href="#main"><i class="fa fa-comment"></i>Main</a></li>
-								<li><a href="#about"><i class="fa fa-shield"></i>About</a></li>
+								<li><a href="#!/user"><i class="fa fa-home"></i>Admin users</a></li>
+								<li><a href="#!/parkingspots/user/1"><i class="fa fa-comment"></i>Admin parkingspots</a></li>
+								<li><a href="#!/search"><i class="fa fa-comment"></i>Search parkingspot</a></li>
+								<li><a href="#!/parkingtimes/all"><i class="fa fa-comment"></i>Schedule.all</a></li>
+								<li><a href="#!/main"><i class="fa fa-comment"></i>Main</a></li>
+								<li><a href="#!/about"><i class="fa fa-shield"></i>About</a></li>
 						</ul>
 				</div>
 			</nav>

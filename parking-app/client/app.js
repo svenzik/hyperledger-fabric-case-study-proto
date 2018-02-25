@@ -41,13 +41,13 @@ app.factory('appFactory', function($http){
 
 	factory.queryAllTuna = function(callback){
 
-			$http.get(factory.getApiPath('/get_all_tuna/')).success(function(output){
+			$http.get(factory.getApiPath('/get_all_tuna/')).then(function(output){
 			callback(output)
 		});
 	}
 
 	factory.queryTuna = function(id, callback){
-			$http.get(factory.getApiPath('/get_tuna/'+id)).success(function(output){
+			$http.get(factory.getApiPath('/get_tuna/'+id)).then(function(output){
 			callback(output)
 		});
 	}
@@ -57,14 +57,14 @@ app.factory('appFactory', function($http){
 		// data.location = data.longitude + ", "+ data.latitude;
 		/*
 		var tuna = data.id + "-" + data.location + "-" + data.timestamp + "-" + data.holder + "-" + data.vessel + "-" + data.parkingspot;
-		$http.get('/add_tuna/'+tuna).success(function(output){
+		$http.get('/add_tuna/'+tuna).then(function(output){
 			callback(output)
 		});
 		*/
 		var tuna = JSON.stringify(data);
 
 		$http.post(factory.getApiPath('/add_tuna/'), tuna)
-			.success(function(output){
+			.then(function(output){
 				callback(output)
 			});
 	}
@@ -73,7 +73,7 @@ app.factory('appFactory', function($http){
 
 		var holder = data.id + "-" + data.name;
 
-			$http.get(factory.getApiPath('/change_holder/'+holder)).success(function(output){
+			$http.get(factory.getApiPath('/change_holder/'+holder)).then(function(output){
 			callback(output)
 		});
 	}
