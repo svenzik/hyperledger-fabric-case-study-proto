@@ -1,10 +1,5 @@
 package parkingservice
 
-/* Imports
-* 4 utility libraries for handling bytes, reading and writing JSON,
-formatting, and string manipulation
-* 2 specific Hyperledger Fabric specific libraries for Smart Contracts
-*/
 import (
   "reflect"
 

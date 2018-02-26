@@ -1,6 +1,8 @@
 package parkingservice
 
 import (
+	"fmt"
+	"errors"
 	"time"
 	"github.com/shopspring/decimal"
 )
@@ -10,7 +12,7 @@ type ParkingTime struct {
 	ParkingStart      time.Time        `json:"parkingStart"`
 	ParkingEnd        time.Time        `json:"parkingEnd"`
 	ParkingType       string           `json:"parkingType"` //RESERVATION,PARKING,FREE
-	CostPerMinute     int              `json:"costPerMinute"`
+	CostPerMinute     int              `json:"costPerMinute"` //in cents
 	Cost              int              `json:"cost"`
 	Parkingspot       Parkingspot      `json:"parkingspot"`
 	Renter            User             `json:"renter"`
@@ -32,19 +34,51 @@ type User struct {
 }
 
 type ParkingSpotLocation struct {
-	X       decimal.Decimal `json:"x"`
-	Y       decimal.Decimal `json:"y"`
+	X       float64 `json:"x"` //N,Latitude 
+	Y       float64 `json:"y"` //E,Longitude
+	GeoHash string  `json:"geoHash"`
 }
 
 type CurrencyAmount struct {
-	Amount       int    `json:"amount"`
-	CurrencyName string `json:"currencyName"`
+	Amount       decimal.Decimal  `json:"amount"`
+	CurrencyName string           `json:"currencyName"`
 }
 
 type Balance struct {
-	Id           string `json:"id"`
-	CurrencyName string `json:"currencyName"`
-	Amount       int    `json:"amount"`
+	Id           string          `json:"id"`
+	CurrencyName string          `json:"currencyName"`
+	Amount       decimal.Decimal `json:"amount"`
+}
+
+func (s *Balance) AddCents(amount int) {
+	s.Amount.Add(decimal.NewFromFloat(float64(amount)/100))
+}
+
+func (s *Balance) SubtractCents(amount int) {
+	s.Amount.Sub(decimal.NewFromFloat(float64(amount)/100))
+}
+
+//func (s *Balance) Add(amount Balance) Balance {
+//	s.Amount.Add(amount)
+//	return s;
+//}
+//
+//func (s *Balance) Subtract(amount Balance) Balance {
+//	s.Amount.Sub(amount)
+//	return s;
+//}
+
+func (s *Balance) transferTo(balanceTo Balance, amount decimal.Decimal) (Balance, error) {
+	if s.Amount.LessThan(amount) {
+		return *s, errors.New(fmt.Sprintf("Not enough funds: %s->%s", s.Amount, amount))
+	}
+	if s.CurrencyName != balanceTo.CurrencyName {
+		return *s, errors.New(fmt.Sprintf("Cannot transfer different currencie: %s->%s", s.CurrencyName, balanceTo.CurrencyName))
+	}
+	s.Amount.Sub(amount)
+	balanceTo.Amount.Add(amount)
+
+	return *s, nil;
 }
 
 type CurrentTimestamp struct {

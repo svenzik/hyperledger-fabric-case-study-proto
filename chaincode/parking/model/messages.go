@@ -1,8 +1,12 @@
 package parkingservice
 
-// "time"
+import (
+	"time"
+)
 
 type FindParkingspotParameter struct {
-	Name string `json:"name"`
-	OwnerId string `json:"ownerId"`
+	Location      ParkingSpotLocation `json:"location"`
+	Zoom          int                 `json:"zoom"`
+	ParkingStart  time.Time           `json:"parkingStart"`
+	ParkingEnd    time.Time           `json:"parkingEnd"`
 }
