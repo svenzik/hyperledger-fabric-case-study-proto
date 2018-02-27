@@ -11,6 +11,7 @@ app.controller('parkingspotCtrl', function($scope, $routeParams, parkingspotServ
 	
 	var userId = $routeParams.id;
 
+	$scope.allParkingspots = [];
 	$scope.parkingSpotParkingTimes = [];
 	$scope.selectedParkingspot = {
 		"id": 0,

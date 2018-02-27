@@ -279,7 +279,6 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 			Id: "1",
 			Name: "Prisma",
 		},
-		//Location: s.GeoHashService.CreateLocationWithGeoHash(58.364254, 26.741460, "ud7h08bs3jt"),
 		Location: s.GeoHashService.CreateLocation(58.364254, 26.741460),
 	}
 	psRimi := Parkingspot{
@@ -290,7 +289,7 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 			Id: "2",
 			Name: "Rimi",
 		},
-		Location: s.GeoHashService.CreateLocationWithGeoHash(58.368405, 26.738235, "ud7h03whw53"),
+		Location: s.GeoHashService.CreateLocation(58.368405, 26.738235),
 	}
 	psUT1 := Parkingspot{
 		Id: "3",
@@ -300,7 +299,7 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 			Id: "3",
 			Name: "UT",
 		},
-		Location: s.GeoHashService.CreateLocationWithGeoHash(58.3785427, 26.7143264, "ud6upgmr89h"),
+		Location: s.GeoHashService.CreateLocation(58.3785427, 26.7143264),
 	}
 	psUT2 := Parkingspot{
 		Id: "4",
@@ -310,36 +309,53 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 			Id: "3",
 			Name: "UT",
 		},
-		Location: s.GeoHashService.CreateLocationWithGeoHash(58.378538, 26.714325, "ud6upgkz8uh"),
+		Location: s.GeoHashService.CreateLocation(58.378538, 26.714325),
 	}
 
-	parkingSpotBytes, _ := json.Marshal(ParkingTime{ParkingStart: time.Now(), ParkingEnd: time.Now().Add(8 * time.Hour), CostPerMinute: 10, Parkingspot: Parkingspot{Id: "1", Name: "Tartu-Sobra-tee-1-315"}})
-	s.saveParkingtimeOpenTime(APIstub,  []string{"100", fmt.Sprintf("%s", parkingSpotBytes)})
-	parkingSpotBytes, _ = json.Marshal(ParkingTime{ParkingStart: time.Now(), ParkingEnd: time.Now().Add(8 * time.Hour), CostPerMinute: 12, Parkingspot: Parkingspot{Id: "2", Name: "Tartu-Sobra-tee-2-1"}})
-	s.saveParkingtimeOpenTime(APIstub,  []string{"200", fmt.Sprintf("%s", parkingSpotBytes)})
-	
-	parkingSpotBytes, _ = json.Marshal(psSelver)
-	s.SaveParkingspot(APIstub, []string{"1", fmt.Sprintf("%s", parkingSpotBytes)})
-	parkingSpotBytes, _ = json.Marshal(psRimi)
-	s.SaveParkingspot(APIstub, []string{"2", fmt.Sprintf("%s", parkingSpotBytes)})
-	parkingSpotBytes, _ = json.Marshal(psUT1)
-	s.SaveParkingspot(APIstub, []string{"3", fmt.Sprintf("%s", parkingSpotBytes)})
-	parkingSpotBytes, _ = json.Marshal(psUT2)
-	s.SaveParkingspot(APIstub, []string{"4", fmt.Sprintf("%s", parkingSpotBytes)})
+	s.ParkingspotService.Save(APIstub, psSelver)
+	s.ParkingspotService.Save(APIstub, psRimi)
+	s.ParkingspotService.Save(APIstub, psUT1)
+	s.ParkingspotService.Save(APIstub, psUT2)
+
+	s.ParkingTimeService.SaveParkingtimeOpenTime(APIstub,  ParkingTime{
+		Id: "1",
+		ParkingStart: time.Now(),
+		ParkingEnd: time.Now().Add(8 * time.Hour),
+		CostPerMinute: 10,
+		Parkingspot: psSelver})
+	s.ParkingTimeService.SaveParkingtimeOpenTime(APIstub, ParkingTime{
+		Id: "2",
+		ParkingStart: time.Now(),
+		ParkingEnd: time.Now().Add(8 * time.Hour),
+		CostPerMinute: 12,
+		Parkingspot: psRimi})
+	s.ParkingTimeService.SaveParkingtimeOpenTime(APIstub, ParkingTime{
+		Id: "3",
+		ParkingStart: time.Now(),
+		ParkingEnd: time.Now().Add(8 * time.Hour),
+		CostPerMinute: 3,
+		Parkingspot: psUT1})
+	s.ParkingTimeService.SaveParkingtimeOpenTime(APIstub, ParkingTime{
+		Id: "4",
+		ParkingStart: time.Now(),
+		ParkingEnd: time.Now().Add(8 * time.Hour),
+		CostPerMinute: 3,
+		Parkingspot: psUT2})
 
 	parkingSpot := []ParkingTime{
-		ParkingTime{ParkingStart: time.Now(), ParkingEnd: time.Now(), CostPerMinute: 10, Parkingspot: psSelver},
-		ParkingTime{ParkingStart: time.Now().Add(2 * time.Minute), ParkingEnd: time.Now().Add(5 * time.Minute), CostPerMinute: 10, Parkingspot: psSelver},
-		ParkingTime{ParkingStart: time.Now().Add(10 * time.Minute), ParkingEnd: time.Now().Add(30 * time.Minute), CostPerMinute: 10, Parkingspot: psSelver},
-		ParkingTime{ParkingStart: time.Now().Add(31 * time.Minute), ParkingEnd: time.Now().Add(45 * time.Minute), CostPerMinute: 10, Parkingspot: psSelver},
-		ParkingTime{ParkingStart: time.Now().Add(46 * time.Minute), ParkingEnd: time.Now().Add(105 * time.Minute), CostPerMinute: 10, Parkingspot: psRimi},
+		ParkingTime{ParkingStart: time.Now(), ParkingEnd: time.Now(), CostPerMinute: 10, Parkingspot: psUT1},
+		ParkingTime{ParkingStart: time.Now().Add(2 * time.Minute), ParkingEnd: time.Now().Add(5 * time.Minute), CostPerMinute: 10, Parkingspot: psUT1},
+		ParkingTime{ParkingStart: time.Now().Add(10 * time.Minute), ParkingEnd: time.Now().Add(30 * time.Minute), CostPerMinute: 10, Parkingspot: psUT1},
+		ParkingTime{ParkingStart: time.Now().Add(31 * time.Minute), ParkingEnd: time.Now().Add(45 * time.Minute), CostPerMinute: 10, Parkingspot: psUT1},
+		ParkingTime{ParkingStart: time.Now().Add(25 * time.Minute), ParkingEnd: time.Now().Add(45 * time.Minute), CostPerMinute: 10, Parkingspot: psUT2},
+		ParkingTime{ParkingStart: time.Now().Add(46 * time.Minute), ParkingEnd: time.Now().Add(105 * time.Minute), CostPerMinute: 10, Parkingspot: psUT2},
 	}
 
-	i := 0
+	i := 10
 	for i < len(parkingSpot) {
-		parkingSpotAsBytes, _ := json.Marshal(parkingSpot[i])
-		s.saveParkingtime(APIstub, []string{strconv.Itoa(i + 1), fmt.Sprintf("%s", parkingSpotAsBytes)})
-		//APIstub.PutState(strconv.Itoa(i+1), parkingSpotAsBytes)
+		ps := parkingSpot[i]
+		ps.Id = strconv.Itoa(i + 1)
+		s.ParkingTimeService.SaveParkingtime(APIstub, ps)
 		fmt.Println("Added", parkingSpot[i])
 		i = i + 1
 	}
@@ -439,11 +455,10 @@ func (s *SmartContract) saveCD(APIstub shim.ChaincodeStubInterface, args []strin
 func (s *SmartContract) saveParkingtimeOpenTime(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 	parkingTime, err := s.unmarshal(args[1])
 	if err != nil {
-		return shim.Error(fmt.Sprintf("Failed to unmarshal parkingTime: %s", args[1]))
+		return shim.Error(fmt.Sprintf("Failed to unmarshal parkingTime free. %s: %s", err, args[1]))
 	}
 
-	parkingTime.ParkingType = "FREE"
-	parkingTimeResult, err := s.ParkingTimeService.Save(APIstub, parkingTime)
+	parkingTimeResult, err := s.ParkingTimeService.SaveParkingtimeOpenTime(APIstub, parkingTime)
 	if err != nil {
 		return shim.Error(fmt.Sprintf("Failed to persist parkingTime: %s", err))
 	}
@@ -455,7 +470,7 @@ func (s *SmartContract) saveParkingtimeOpenTime(APIstub shim.ChaincodeStubInterf
 func (s *SmartContract) saveReservation(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 	parkingTime, err := s.unmarshal(args[1])
 	if err != nil {
-		return shim.Error(fmt.Sprintf("Failed to unmarshal parkingTime: %s", args[1]))
+		return shim.Error(fmt.Sprintf("Failed to unmarshal parkingTime reservation. %s: %s", err, args[1]))
 	}
 
 	fmt.Printf("Saving reservation: %s\n",  args[1])
@@ -477,8 +492,7 @@ func (s *SmartContract) saveReservation(APIstub shim.ChaincodeStubInterface, arg
 		}
 	}
 
-	parkingTime.ParkingType = "RESERVATION"
-	parkingTimeResult, err := s.ParkingTimeService.Save(APIstub, parkingTime)
+	parkingTimeResult, err := s.ParkingTimeService.SaveParkingtimeReservation(APIstub, parkingTime)
 	if err != nil {
 		return shim.Error(fmt.Sprintf("Failed to persist parkingTime: %s", err))
 	}
@@ -490,7 +504,7 @@ func (s *SmartContract) saveReservation(APIstub shim.ChaincodeStubInterface, arg
 func (s *SmartContract) saveParkingtime(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 	parkingTime, err := s.unmarshal(args[1])
 	if err != nil {
-		return shim.Error(fmt.Sprintf("Failed to unmarshal parkingTime: %s", args[1]))
+		return shim.Error(fmt.Sprintf("Failed to unmarshal parkingTime. %s: %s", err, args[1]))
 	}
 
 	resultsIterator, _ := s.findParkingspotOverlaping(APIstub, parkingTime.ParkingStart, parkingTime.ParkingEnd)
@@ -507,8 +521,7 @@ func (s *SmartContract) saveParkingtime(APIstub shim.ChaincodeStubInterface, arg
 		}
 	}
 
-	parkingTime.ParkingType = "PARKING"
-	parkingTimeResult, err := s.ParkingTimeService.Save(APIstub, parkingTime)
+	parkingTimeResult, err := s.ParkingTimeService.SaveParkingtime(APIstub, parkingTime)
 	if err != nil {
 		return shim.Error(fmt.Sprintf("Failed to persist parkingTime: %s", err))
 	}
@@ -769,9 +782,15 @@ func (s *SmartContract) FindParkingspotToRent(APIstub shim.ChaincodeStubInterfac
 		return shim.Error(fmt.Sprintf("Failed to unmarshal FindParkingspotParameter parameter: %s", err))
 	}
 
-	location := s.GeoHashService.CreateLocationUsingZoom(findParkingspotParameter.Location.X, findParkingspotParameter.Location.Y, findParkingspotParameter.Zoom)
+	var resultsIterator shim.StateQueryIteratorInterface
+	if findParkingspotParameter.Zoom != 0 {
+		location := s.GeoHashService.CreateLocationUsingZoom(findParkingspotParameter.Location.X, findParkingspotParameter.Location.Y, findParkingspotParameter.Zoom)
+		resultsIterator, err = s.findParkingspotForLocationAndTime(APIstub, location, findParkingspotParameter.ParkingStart, findParkingspotParameter.ParkingEnd)
 
-	resultsIterator, err := s.findParkingspotForLocationAndTime(APIstub, location, findParkingspotParameter.ParkingStart, findParkingspotParameter.ParkingEnd)
+	} else {
+		resultsIterator, err = s.findParkingspotOverlaping(APIstub, findParkingspotParameter.ParkingStart, findParkingspotParameter.ParkingEnd)
+	}
+
 	if err != nil {
 		return shim.Error(err.Error())
 	}
@@ -791,7 +810,7 @@ func (s *SmartContract) GetOwnerParkingspots(APIstub shim.ChaincodeStubInterface
 
 	OwnerId := args[0]
 
-	queryString := fmt.Sprintf("{\"selector\": \"owner.id\": {\"$eq\": \"%s\"}}}", OwnerId)
+	queryString := fmt.Sprintf("{\"selector\": {\"owner.id\": {\"$eq\": \"%s\"}}}", OwnerId)
 	resultsIterator, err := APIstub.GetQueryResult(queryString)
 	if err != nil {
 		return shim.Error(fmt.Sprintf("Failed to query: %s", err))
@@ -954,7 +973,7 @@ func (s *SmartContract) findParkingspotForLocationAndTime(APIstub shim.Chaincode
 	LocationGeoHash := location.GeoHash
 	ParkingStartIso,_ := ParkingStart.MarshalText()
 	ParkingEndIso,_ := ParkingEnd.MarshalText()
-	fmt.Printf("findParkingspotOverlaping: %s, %s\n", ParkingStartIso, ParkingEndIso)
+	fmt.Printf("findParkingspotForLocationAndTime: %s, %s, %s\n", LocationGeoHash, ParkingStartIso, ParkingEndIso)
 	return s.findParkingspotForLocationAndTimeIsoString(APIstub, LocationGeoHash, string(ParkingStartIso), string(ParkingEndIso));
 }
 

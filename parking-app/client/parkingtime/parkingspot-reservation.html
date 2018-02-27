@@ -1,14 +1,15 @@
 		<div id="body">
 			<div style="display: flex; flex-wrap: wrap;">
 				<div>
-					<div class="form-group" style="width: 400px">
-						X: <input class="form-control" type="text" ng-model="parkingspotQuery.x">
-						Y: <input class="form-control" type="text" ng-model="parkingspotQuery.y">
+					<div class="form-group" style="width: 250px">
+						X: <input class="form-control" type="number" ng-model="center.lat">
+						Y: <input class="form-control" type="number" ng-model="center.lng">
+						Zoom: <input class="form-control" type="number" ng-model="center.zoom">
 						Start: <input class="form-control" type="text" datetime="dd.MM.yyyy HH:mm:ss" datetime-model="yyyy-MM-ddTHH:mm:ss" ng-model="parkingspotQuery.startTime">
 						End: <input class="form-control" type="text" datetime="dd.MM.yyyy HH:mm:ss" ng-model="parkingspotQuery.endTime">
 						
-						Start: <datetimepicker data-ng-model="parkingspotQuery.startTime"></datetimepicker>
-						End: <datetimepicker data-ng-model="parkingspotQuery.endTime"></datetimepicker>
+						<!-- Start: <datetimepicker data-ng-model="parkingspotQuery.startTime"></datetimepicker> -->
+						<!-- End: <datetimepicker data-ng-model="parkingspotQuery.endTime"></datetimepicker> -->
 						<!--
 						<div class="dropdown">
 					    <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" data-target=".dropdown" href="#">
@@ -90,7 +91,7 @@
 						</tr>
 					</table>
 				</div>
-				<div class="form-group" style="width: 400px; margin-left: 10px;">
+				<div class="form-group" style="width: 250px; margin-left: 10px;">
 					<label>Update parkingtime: {{lastTransactionId}}</label>
 					<br/>
 					id: <input class="form-control" type="text" placeholder="Ex: 11" ng-model="newParkingtime.id">
@@ -101,6 +102,14 @@
 					Parkingspot.name: <input class="form-control" type="text" placeholder="Ex: 2" ng-model="newParkingtime.parkingspot.name">
 					<input type="submit" value="Create new parking slot" class="btn btn-primary" ng-click="saveParkingtime(newParkingtime)">
 					<input type="submit" value="Create new parking reservation" class="btn btn-primary" ng-click="saveParkingtimeReservation(newParkingtime)">
+				</div>
+				<div style="width: 400px; margin-left: 10px;">
+					<!-- <form>
+							Latitude : <input class="form-control" type="number" step="any" ng-model="center.lat">
+							Longitude : <input class="form-control" type="number" step="any" ng-model="center.lng">
+							Zoom : <input class="form-control" type="number" step="any" ng-model="center.zoom">
+					</form> -->
+			    <leaflet center="center" width="100%" height="480px" geojson="geojson"></leaflet>
 				</div>
 			</div>
 		</div>

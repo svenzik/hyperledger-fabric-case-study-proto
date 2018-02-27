@@ -38,3 +38,18 @@ func (s *ParkingTimeService) Save(APIstub shim.ChaincodeStubInterface, parkingTi
   r, _ := result.(ParkingTime)
   return r, err
 }
+
+func (s *ParkingTimeService) SaveParkingtimeOpenTime(APIstub shim.ChaincodeStubInterface, parkingTime ParkingTime) (ParkingTime, error) {
+	parkingTime.ParkingType = "FREE"
+	return s.Save(APIstub, parkingTime)
+}
+
+func (s *ParkingTimeService) SaveParkingtimeReservation(APIstub shim.ChaincodeStubInterface, parkingTime ParkingTime) (ParkingTime, error) {
+	parkingTime.ParkingType = "RESERVATION"
+	return s.Save(APIstub, parkingTime)
+}
+
+func (s *ParkingTimeService) SaveParkingtime(APIstub shim.ChaincodeStubInterface, parkingTime ParkingTime) (ParkingTime, error) {
+	parkingTime.ParkingType = "PARKING"
+	return s.Save(APIstub, parkingTime)
+}

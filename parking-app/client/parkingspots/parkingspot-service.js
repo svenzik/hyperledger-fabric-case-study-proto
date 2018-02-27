@@ -19,7 +19,7 @@ app.factory('parkingspotService', function(apiService){
 		// s.startTime = moment(s.startTime).toISOString();
 		// s.endTime = moment(s.endTime).toISOString();
 
-		return apiService.get(`/parkingspot/search/reservation/x/${s.x}/y/${s.y}/zoom/6/startTime/${s.startTime}/endTime/${s.endTime}/`)
+		return apiService.get(`/parkingspot/search/reservation/x/${s.x}/y/${s.y}/zoom/${s.zoom}/startTime/${s.startTime}/endTime/${s.endTime}/`)
 		.then(result => {
 			return result.data;
 		});

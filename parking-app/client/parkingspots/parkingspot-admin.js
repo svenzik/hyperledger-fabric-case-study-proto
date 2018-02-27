@@ -17,8 +17,8 @@ app.controller('parkingspotAdminCtrl', function($scope, $routeParams, $location,
 		"id":"xxx",
 		"name": "xxx",
 		"location": {
-			"x": 0,
-			"y": 0
+			"x": 58.3785427,
+			"y": 26.7143264
 		},
 		"costPerMinute": {
 			"amount": 10,

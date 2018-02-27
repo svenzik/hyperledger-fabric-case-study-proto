@@ -4,7 +4,9 @@
 
 var app = angular.module('application', [
 		'ngRoute', 
-		'ui.bootstrap.datetimepicker'
+		'ui.bootstrap.datetimepicker',
+		'leaflet-directive',
+		'angular-geohash'
 	]
 );
 

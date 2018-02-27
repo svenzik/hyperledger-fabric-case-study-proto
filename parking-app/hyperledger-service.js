@@ -184,8 +184,13 @@ return{
 								console.error('Transaction proposal was bad');
 								//throw new Error('Transaction proposal was bad: ' + proposalResponses[0].response.message);
 								var resultJsonText = proposalResponses[0].toString();
-								console.error("Response is ", resultJsonText);
-								res.json(JSON.parse(resultJsonText));
+								// console.log("================");
+								// console.log(proposalResponses[0].toJson());
+								// console.log("================");
+								// console.error("Response is ", resultJsonText);
+								// res.json(proposalResponses[0].response);
+								res.status(501).send({error: proposalResponses[0].toString()});
+								return;
 						}
 				if (isProposalGood) {
 						console.log(util.format(
@@ -267,6 +272,7 @@ return{
 				}
 		}).catch((err) => {
 				console.error('Failed to invoke successfully :: ' + err);
+				console.error(err);
 				res.status(500).send({error: err.toString()});
 		});
 	},
