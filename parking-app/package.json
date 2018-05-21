@@ -4,8 +4,8 @@
 		"description": "Hyperledger Fabric MOOC Sample Application",
 		"main": "server.js",
 		"scripts": {
-			"start": "PORT=8001 node server.js",
-			"start-dev": "PORT=8001 node server.js & browser-sync start --port 18000 --no-open  --proxy 'localhost:8001' --serveStatic './' --files './'"
+				"start": "PORT=8001 node server.js",
+				"start-dev": "PORT=8001 node server.js & browser-sync start --port 18000 --no-open  --proxy 'localhost:8001' --serveStatic './' --files './'"
 		},
 		"dependencies": {
 				"angular": "^1.6.9",
