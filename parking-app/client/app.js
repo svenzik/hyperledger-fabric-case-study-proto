@@ -101,10 +101,6 @@ app.config(function($routeProvider) {
 								templateUrl : "parkingtime/parkingspot-reservation.html",
 								controller : "parkingtimeCtrl"
 						})
-			.when("/parkingtimes/all", {
-				templateUrl : "main.html",
-				controller : "mainController"
-			})
 			.when("/user", {
 								templateUrl : "users/user.html",
 								controller : "userCtrl"
