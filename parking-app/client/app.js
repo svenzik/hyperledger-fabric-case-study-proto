@@ -86,8 +86,8 @@ app.factory('appFactory', function($http){
 app.config(function($routeProvider) {
 			$routeProvider
 			.when("/", {
-						templateUrl : "main.html",
-						controller : "mainController"
+								templateUrl : "users/user.html",
+								controller : "userCtrl"
 						})
 			.when("/parkingspots/user/:id", {
 								templateUrl : "parkingspots/parkingspot-admin.html",
