@@ -27,7 +27,16 @@ require('./routes.js')(app);
 
 // set up a static file server that points to the "client" directory
 app.use(express.static(path.join(__dirname, './client')));
-app.use(express.static(__dirname));
+//app.use(express.static(__dirname));
+app.use(express.static(__dirname + '/node_modules/bootstrap/dist'));
+app.use(express.static(__dirname + '/node_modules/leaflet/dist'));
+app.use(express.static(__dirname + '/node_modules/moment'));
+app.use(express.static(__dirname + '/node_modules/jquery/dist'));
+app.use(express.static(__dirname + '/node_modules/angular'));
+app.use(express.static(__dirname + '/node_modules/angular-route'));
+app.use(express.static(__dirname + '/node_modules/angular-leaflet-directive/dist'));
+app.use(express.static(__dirname + '/node_modules/angular-geohash/dist'));
+app.use(express.static(__dirname + '/node_modules/angular-bootstrap-datetimepicker/src'));
 
 // Save our port
 var port = process.env.PORT || 8000;
