@@ -1,6 +1,6 @@
 #!/bin/bash
 
-go get github.com/golang/protobuf
+go get github.com/golang/protobuf/protoc-gen-go
 go get github.com/digitorus/pkcs7
 go get github.com/digitorus/timestamp
 go get github.com/pierrre/geohash
